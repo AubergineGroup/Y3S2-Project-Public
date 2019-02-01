@@ -1,0 +1,305 @@
+﻿@{
+    ViewData["Title"] = "Schedules";
+    Layout = "~/Views/Shared/_App.cshtml";
+}
+@section Styles {
+    <style>
+        body {
+            background: #fff;
+        }
+
+        @*TEMPERORY STYLE*@
+        .better-card {
+            box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+        }
+        td {
+            cursor: pointer;
+        }
+
+    </style>
+}
+
+<div id="project-dashboard" class="page-layout simple right-sidebar">
+    <div class="page-content-wrapper custom-scrollbar">
+        <!-- HEADER -->
+        <div class="page-header bg-primary text-auto d-flex flex-column justify-content-between px-6 pt-4 pb-0">
+            <div class="row no-gutters align-items-start flex-nowrap">
+                <div>
+                    <div class="logo-text">
+                        <div class="h2">Schedule Manager</div>
+                        <div class="">View and manage schedules for cleaners and toilets</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- / HEADER -->
+        <!-- CONTENT -->
+        <div class="page-content">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link btn active fuse-ripple-ready" id="current-status-tab" data-toggle="tab" href="#current-status-tab-pane" role="tab" aria-controls="current-status-tab-pane" aria-expanded="true">View and Manage</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn fuse-ripple-ready" id="auto-tab" data-toggle="tab" href="#auto-tab-pane" role="tab" aria-controls="auto-tab-pane">Auto-assign</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="maincontent">
+                <!-- HOME TAB -->
+                <div class="tab-pane fade show active p-3" id="current-status-tab-pane" role="tabpanel" aria-labelledby="current-status-tab">
+                    <div class="widget-group row no-gutters">
+                        <div class="col-12 col-lg-6 p-3">
+                            <div class="widget widget-7 better-card">
+                                <div class="widget-header px-4 row no-gutters align-items-center justify-content-between" style="border-bottom: 1px solid rgba(0,0,0,0.12);height:8.5rem">
+                                    <div>
+                                        <p class="h5">Cleaners</p>
+                                        <p class="text-muted">View and manually manage cleaners</p>
+                                    </div>
+                                </div>
+                                <div class="widget-content p-4">
+                                    <table id="cleaners_table" class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Cleaner Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>...</td>
+                                            </tr>
+                                            <tr>
+                                                <td>...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 p-3">
+                            <div class="widget widget-7 better-card">
+                                <div class="widget-header px-4 row no-gutters align-items-center justify-content-between" style="border-bottom: 1px solid rgba(0,0,0,0.12);height:8.5rem">
+                                    <div>
+                                        <p class="h5">Toilets</p>
+                                        <p class="text-muted">View and manually manage toilets</p>
+                                    </div>
+                                </div>
+                                <div class="widget-content p-4">
+                                    <table id="toilets_table" class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Toilet Name</th>
+                                                <th>Toilet Gender</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>...</td>
+                                                <td>...</td>
+                                            </tr>
+                                            <tr>
+                                                <td>...</td>
+                                                <td>...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- / HOME TAB -->
+                <!-- AUTOASSIGN TAB -->
+                <div class="tab-pane fade p-3" id="auto-tab-pane" role="tabpanel" aria-labelledby="auto-tab">
+                    <div class="widget-group row no-gutters">
+                        <div class="col-12 col-lg-6 p-3">
+                            <div class="widget widget-7 better-card">
+                                <div class="widget-header px-4 row no-gutters align-items-center justify-content-between" style="border-bottom: 1px solid rgba(0,0,0,0.12);height:8.5rem">
+                                    <div>
+                                        <p class="h5">Auto Assign</p>
+                                        <p class="text-muted">Automatically generate schedules for cleaners and toilets</p>
+                                    </div>
+                                </div>
+                                <div class="widget-content p-4">
+                                    <div layout-gt-xs="row" style="margin-bottom: 1.8rem" ng-controller="DatepickerController as ctrl">
+                                        <div flex-gt-xs>
+                                            <md-datepicker id="from" ng-model="ctrl.from" md-placeholder="From" md-min-date="ctrl.today" ng-change="" md-open-on-focus></md-datepicker>
+                                            <md-datepicker id="to" ng-model="ctrl.to" md-placeholder="To" md-min-date="ctrl.today" ng-change="" md-open-on-focus></md-datepicker>
+                                            <button type="submit" class="btn btn-primary fuse-ripple-ready" style="margin-left:20px;" onclick="autoSchedule()">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- / AUTOASSIGN TAB -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script src="~/js/ts.js"></script>
+    <script>
+        (function () {
+            $.get('/Temp/GetAllToilets', {},
+                function (returnedData) {
+                    console.table(returnedData);
+                    var toilet_table = $('#toilets_table').DataTable({
+                        "bLengthChange": false,
+                        "bFilter": false,
+                        rowId: 'toiletId',
+                        data: returnedData,
+                        columns: [
+                            { data: 'toiletName' },
+                            { data: 'toiletGender' }]
+                    });
+                    $('#toilets_table tbody').on('click', 'tr', function () {
+                        var id = toilet_table.row(this).id();
+                        id = id.replace(/\D/g, '');
+                        id = parseInt(id, 10);
+                        localStorage.id = id;
+                        localStorage.type = "toilet";
+                        window.location.replace("Scheduler");
+                    });
+                });
+            $.get('/Temp/GetAllCleaners', {},
+                function (returnedData) {
+                    console.table(returnedData);
+                    var cleaner_table = $('#cleaners_table').DataTable({
+                        "bLengthChange": false,
+                        "bFilter": false,
+                        rowId: 'cleanerId',
+                        data: returnedData,
+                        columns: [
+                            {
+                                "mData": 'cleanerName',
+                                "mRender": function (x, y, full) {
+                                    return full['firstName'] + ' ' + full['lastName'];
+                                }
+                            }]
+                    });
+                    $('#cleaners_table tbody').on('click', 'tr', function () {
+                        var id = cleaner_table.row(this).id();
+                        id = id.replace(/\D/g, '');
+                        id = parseInt(id, 10);
+                        localStorage.id = id;
+                        localStorage.type = "cleaner";
+                        window.location.replace("Scheduler");
+                    });
+                });
+        })();
+
+
+        angular.module('docsApp').controller('DatepickerController', ['$scope', function ($scope) {
+            this.today = new Date();
+        }]);
+
+        function autoSchedule() {
+            (async () => {
+                const model = await tf.loadModel("/api/Analytic/model.json");
+                var cleaner = [], toilet = [], schedule = [];
+                $.ajax({
+                    type: "get", url: "/temp/GetAllCleaners", async: false
+                    , success: function (e) {
+                        cleaner = e.sort((a, b) => a.cleanedCount - b.cleanedCount);
+                        console.log(cleaner);
+                    }
+                });
+                $.ajax({
+                    type: "get", url: "/temp/GetAllToilets", async: false
+                    , success: function (e) {
+                        toilet = e;
+                        console.log(toilet);
+                    }
+                });
+                $.ajax({
+                    type: "post", url: "/temp/GetUpcomingToiletSchedules", async: false, data: { toiletid: 1, getAll: true }
+                    , success: function (e) {
+                        schedule = e;
+                        console.log(schedule);
+                    }
+                });
+                var workHr = [9,  11, 12, 14,  16, 17, 19];
+                var a = angular.element($("#from")).scope().ctrl.from,
+                    b = angular.element($("#to")).scope().ctrl.to;
+
+                workHr.map(w => {
+                });
+                var jobs = [];
+                toilet.map(d => {
+                    var now = new Date();
+                    var time = new Date(d.lastCleaned);
+                    if (time <= now - 2) {
+                        cleaner.map(c => {
+                            if (c.status == "Available") {
+                                schedule.map(s => {
+                                    var date = new Date(s.start_date);
+                                    var hour = date.getHours();
+                                    for (w = 0; w < workHr.length; i++) {
+                                        if (w != hour) {
+                                            var day = parseInt(new Date(date).getDay()),
+                                                hour = parseInt(new Date(date).getHours()),
+                                                min = parseInt(new Date(date).getMinutes()),
+                                                mean = 0;
+
+                                            for (i = 0; i < 4; i++) {
+                                                min += 15;
+                                                mean += model.predict(tf.tensor2d([day, hour, min], [1, 3])).dataSync()[0];
+                                            }
+                                            mean /= 4;
+                                            if (mean < 5) {
+                                                // Assign
+                                                jobs.push({
+                                                    toiletid: d.toiletid,
+                                                    cleanerId: c.cleanerId,
+                                                    startDate: date
+                                                });
+                                                break;
+                                            }
+                                        }
+                                    }
+                                });
+                                var date = new Date(a);
+                                var startDate = parseInt(new Date(date).getDay());
+                                var fromDate = new Date(b);
+                                var endDate = parseInt(new Date(fromDate.getDate())) ;
+                                for (i = 0; i < (startDate - endDate); i++) {
+                                    for (w = 0; w < workHr.length(); i++) {
+                                        if (w != hour) {
+                                            var day = parseInt(new Date(date).getDay()),
+                                                hour = parseInt(new Date(date).getHours()),
+                                                min = parseInt(new Date(date).getMinutes()),
+                                                mean = 0;
+
+                                            for (i = 0; i < 4; i++) {
+                                                min += 15;
+                                                mean += model.predict(tf.tensor2d([day, hour, min], [1, 3])).dataSync()[0];
+                                            }
+                                            mean /= 4;
+                                            if (mean < 5) {
+                                                // Assign
+                                                jobs.push({
+                                                    toiletid: d.toiletid,
+                                                    cleanerId: c.cleanerId,
+                                                    startDate: date
+                                                });
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                
+
+                            }
+                        });
+                    }
+                });
+                console.log(jobs);
+            })();
+
+
+        }
+    </script>
+}

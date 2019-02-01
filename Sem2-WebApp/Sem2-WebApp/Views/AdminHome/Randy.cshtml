@@ -1,0 +1,839 @@
+﻿@{
+    ViewData["Title"] = "Overview";
+}
+
+@section Styles {
+    <style>
+        body {
+            background: #fff;
+        }
+
+        @*TEMPERORY STYLE*@
+        .better-card {
+            box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+        }
+        #chart svg {
+            height: 400px;
+        }
+        #chart2 svg {
+            height: 600px;
+        }
+    </style>
+}
+
+<div id="project-dashboard" class="page-layout simple right-sidebar">
+    <div class="page-content-wrapper custom-scrollbar">
+        <!-- HEADER -->
+        <div class="page-header bg-primary text-auto d-flex flex-column justify-content-between px-6 pt-4 pb-0">
+            <div class="row no-gutters align-items-start flex-nowrap">
+                <div>
+                    <span class="h2">Cleaning History</span>
+                </div>
+            </div>
+        </div>
+        <!-- / HEADER -->
+        <!-- CONTENT -->
+        <div class="page-content">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link btn active fuse-ripple-ready" id="current-status-tab" data-toggle="tab" href="#current-status-tab-pane" role="tab" aria-controls="current-status-tab-pane" aria-expanded="true">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn fuse-ripple-ready" id="history-tab" data-toggle="tab" href="#history-tab-pane" role="tab" aria-controls="history-tab-pane">History</a>
+                </li>
+                @*<li class="nav-item">
+                        <a class="nav-link btn fuse-ripple-ready" id="settings-tab" data-toggle="tab" href="#settings-tab-pane" role="tab" aria-controls="settings-tab-pane">Settings</a>
+                    </li>*@
+            </ul>
+            <div class="tab-content" id="maincontent">
+                <!-- HOME TAB -->
+                <div class="tab-pane fade show active p-3" id="current-status-tab-pane" role="tabpanel" aria-labelledby="current-status-tab">
+                    <div class="widget-group row no-gutters">
+                      
+
+                        <div class="col-12 col-sm-6 col-xl-3 p-3">
+                            <div class="widget widget1 better-card">
+                                <div class="widget-header pl-4 pr-2 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <span class="h6">Toilets cleaned today</span>
+                                    </div>
+                                </div>
+                                <div class="widget-content pt-2 pb-8 d-flex flex-column align-items-center justify-content-center">
+                                    <div class="title text-secondary" id="totalCleaned">—</div>
+                                    <div class="sub-title h6 text-muted">TOILETS</div>
+                                </div>
+                                <div class="widget-footer p-4 bg-light row no-gutters align-items-center">
+                                    <span class="text-muted">Total toilets cleaned by all cleaners</span>
+                                    <span id="currentUserThreshold" class="ml-2"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-xl-3 p-3">
+                            <div class="widget widget1 better-card">
+                                <div class="widget-header pl-4 pr-2 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <span class="h6">Average toilets cleaned</span>
+                                    </div>
+                                </div>
+                                <div class="widget-content pt-2 pb-8 d-flex flex-column align-items-center justify-content-center">
+                                    <div class="title text-secondary" id="avgCleaned">—</div>
+                                    <div class="sub-title h6 text-muted">TOILETS</div>
+                                </div>
+                                <div class="widget-footer p-4 bg-light row no-gutters align-items-center">
+                                    <span class="text-muted">Toilets cleaned by each cleaner</span>
+                                    <span id="currentUserThreshold" class="ml-2"></span>
+                                </div>
+                            </div>
+                        </div><div class="col-12 col-sm-6 col-xl-3 p-3">
+                            <div class="widget widget1 better-card">
+                                <div class="widget-header pl-4 pr-2 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <span class="h6">Average duration for cleaning</span>
+                                    </div>
+                                </div>
+                                <div class="widget-content pt-2 pb-8 d-flex flex-column align-items-center justify-content-center">
+                                    <div class="title text-secondary" id="avgDuration">—</div>
+                                    <div class="sub-title h6 text-muted">MINUTES</div>
+                                </div>
+                                <div class="widget-footer p-4 bg-light row no-gutters align-items-center">
+                                    <span class="text-muted">Time taken per cleaner</span>
+                                    <span id="currentUserThreshold" class="ml-2"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-xl-3 p-3">
+                            <div class="widget widget1 better-card">
+                                <div class="widget-header pl-4 pr-2 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <span class="h6">Most Cleaned Toilet</span>
+                                    </div>
+                                </div>
+                                <div class="widget-content pt-2 pb-8 d-flex flex-column align-items-center justify-content-center">
+                                    <div class="title text-secondary" id="cleanRq">—</div>
+                                    <div class="sub-title h6 text-muted">TOILET NAME</div>
+                                </div>
+                                <div class="widget-footer p-4 bg-light row no-gutters align-items-center">
+                                    <span class="text-muted">Toilet with Highest cleaned counts</span>
+                                    <span id="currentUserThreshold" class="ml-2"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                          <div class="col-12 col-lg-6 p-3">
+                            <div class="widget widget-7 better-card">
+                                <div class="widget-header px-4 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <span class="h6" id="cleaningScheduleTitle">Recently cleaned toilets</span>
+                                    </div>
+                                </div>
+                                <div class="widget-content p-4">
+                                    <div class="py-4 row no-gutters align-items-center justify-content-between">
+                                        <div class="col">
+                                            <div class="h6 text-secondary" id ="toilet1">L569</div>
+                                            <div>
+                                                <span class="text-muted" id="recent1">5 mins ago by Randy Ang</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="py-4 row no-gutters align-items-center justify-content-between">
+                                        <div class="col">
+                                            <div class="h6 text-secondary" id ="toilet2">L569</div>
+                                            <div>
+                                                <span class="text-muted" id="recent2">5 mins ago by Randy Ang</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="py-4 row no-gutters align-items-center justify-content-between">
+                                        <div class="col">
+                                            <div class="h6 text-secondary" id ="toilet3">L569</div>
+                                            <div>
+                                                <span class="text-muted" id="recent3">5 mins ago by Randy Ang</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="py-4 row no-gutters align-items-center justify-content-between">
+                                        <div class="col">
+                                            <div class="h6 text-secondary" id ="toilet4">L569</div>
+                                            <div>
+                                                <span class="text-muted" id="recent4">5 mins ago by Randy Ang</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="py-4 row no-gutters align-items-center justify-content-between">
+                                        <div class="col"> 
+                                            <div class="h6 text-secondary" id ="toilet5">L569</div>
+                                            <div>
+                                                <span class="text-muted" id="recent5">5 mins ago by Randy Ang</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div><div class="col-12 col-lg-6 p-3">
+                            <div class="widget widget-7 better-card">
+                                <div class="widget-header px-4 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        
+
+                                        <span class="h6" id="cleaningScheduleTitle">Toilet Cleaned Counts for Today</span>
+                                 
+                                        <br />  
+                                    </div>
+                                </div>
+                                <div class="widget-content p-4">  
+         </div>
+                                    <div class="py-4 row no-gutters align-items-center justify-content-between">
+                                        <div class="col">
+                                <canvas id="toiletschart" style="width:100; height:100"></canvas>
+                               <input class="form-control md-has-value" type="date" value="2019-01-01" id="example-date-input">
+                               <button text="select" id="btnDate" class="button">Retrieve Data</button>
+                                  <br />  
+                           
+                                </div>
+                                </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade show active p-3" id="history-tab-pane" role="tabpanel" aria-labelledby="history-tab">
+                    <div class="row">
+                          <div class="col-12 col-lg-6 p-3">  
+                              <input class="form-control md-has-value" type="date" value="2019-01-01" id="dateinput2">
+                               <button text="select" id="btnDate2" class="button">Retrieve Data</button>      
+                               </div>
+                               </div>
+                                 <div class="row">
+                          <div class="col-12 col-lg-6 p-3">  
+                                <canvas id="cleanerschart" style="width:100; height:100"></canvas>
+                             
+                               </div>
+                               <div class="col-12 col-lg-6 p-3">  
+                                
+
+                               
+                                <canvas id="cleanerschart2" style="width:100; height:100"></canvas>
+                             
+                               </div>
+                    </div>
+                </div>
+                <!-- / HOME TAB -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://www.chartjs.org/dist/2.7.3/Chart.bundle.js"></script>
+
+@section Scripts {
+
+
+
+
+    <script>
+
+
+var q = new Date();
+var m = q.getMonth();
+var d = q.getDay();
+var y = q.getFullYear();
+
+var date = new Date(y,m,d);
+
+var today = new Date('January 25, 2019, 00:00:00');  
+
+console.log(today);      
+
+ 
+
+$(document).ready(function () { updateLogs();  
+
+ var btnDate2 = document.getElementById("btnDate2");
+btnDate2.addEventListener("click",function(e){
+
+
+
+  var selectedDate2 = new Date($("#dateinput2").val());  
+    var selectedDatee2 = (selectedDate2.getMonth() + 1) + "-" + selectedDate2.getDate() + "-" +selectedDate2.getFullYear();    
+
+            $.ajax({
+
+                url: '/api/Avg/' + selectedDatee2,
+                dataType: 'json',
+                method: 'get',
+                async: false,
+                success: function (data) {
+
+               totalCleaned = document.getElementById('totalCleaned');
+               avgCleaned = document.getElementById('avgCleaned');
+               avgDuration = document.getElementById('avgDuration');
+               cleanRq = document.getElementById('cleanRq');     
+               var timetaken = 0;
+               var requests = new Array;   
+   
+                totalCleaned.textContent = data.length.toString();               
+                avgCleaned.textContent = Math.round(data.length / 4).toString()  ;    
+                for (var i = 0; i < data.length; i++) {
+                timetaken += data[i].duration; console.log(timetaken);
+                }
+                timetaken = timetaken/data.length;    
+                avgDuration.textContent = Math.round(timetaken.toString()).toPrecision(2);    
+                
+                for (var i = 0; i < data.length; i++) {
+               requests.push(data[i].toilet);     
+                }
+                
+                   var counts = {}, max = 0, res;
+    for (var v in requests) {
+      counts[requests[v]] = (counts[requests[v]] || 0) + 1;
+      if (counts[requests[v]] > max) { 
+        max = counts[requests[v]];
+        res = requests[v];
+      }
+
+    }
+    
+cleanRq.textContent = res.toString();      
+                
+
+                
+
+var result = [];var count = 0;   
+data.forEach(function(e) {
+  var c = e.toilet;
+  !this[c] ? (this[c] = e, result.push(this[c])) : this[c].count += e.count
+}, {})
+
+function getItems(input) {
+  var arr = input, obj = new Array;
+  for (var i = 0; i < arr.length; i++) {
+    if (!obj[arr[i].name]) {
+      obj[arr[i].name] = 1;
+    } else if (obj[arr[i].name]) {
+      obj[arr[i].name] += 1;
+    }
+  }
+  return obj;
+}
+
+var cleanscount = getItems(data);      
+
+var randyang = data.filter(function(el) {
+    return el.name == "Randy Angsty";   
+})
+
+var jensenh = data.filter(function(el) {
+    return el.name == "Jensen Huang";   
+})
+
+var jackma = data.filter(function(el) {
+    return el.name == "Jack Ma";   
+})
+
+var brandonl = data.filter(function(el) {
+    return el.name == "Brandon Li";   
+})
+
+var elonmask = data.filter(function(el) {
+    return el.name == "Elon Mask";   
+})
+
+var randyarr = new Array;    
+var jensenharr = new Array;    
+var jackmaarr = new Array;    
+var brandonlarr = new Array;    
+var elonmaskarr = new Array;    
+
+  for (var i = 0; i < randyang.length; i++) {
+      randyarr.push(randyang[i].duration);
+  }
+
+for (var i = 0; i < jensenh.length; i++) {
+      jensenharr.push(jensenh[i].duration);
+  }
+
+  for (var i = 0; i < jackma.length; i++) {
+      jackmaarr.push(jackma[i].duration);
+  }
+
+  for (var i = 0; i < brandonl.length; i++) {
+      brandonlarr.push(brandonl[i].duration);
+  }
+
+  for (var i = 0; i < elonmask.length; i++) {
+      elonmaskarr.push(elonmask[i].duration);
+  }
+
+  
+
+function add(a, b) {
+    return a + b;
+}
+ 
+var randydr = randyarr.reduce(add, 0);  
+var randydrr = randydr/randyarr.length;    
+var jensenhdr = jensenharr.reduce(add, 0);
+var jensenhdrr = jensenhdr/jensenharr.length;   
+var jackmdr = jackmaarr.reduce(add, 0);
+var jackmdrr = jackmdr/jackmaarr.length;   
+var brandonldr = brandonlarr.reduce(add, 0);
+var brandonldrr = brandonldr/brandonlarr.length;   
+var elonmaskdr = elonmaskarr.reduce(add, 0);
+var elonmaskdrr = elonmaskdr/elonmaskarr.length;    
+ 
+var totalduration = new Array;    
+
+
+totalduration.push(randydrr);     
+totalduration.push(jensenhdrr);     
+totalduration.push(jackmdrr);     
+totalduration.push(brandonldrr);     
+totalduration.push(elonmaskdrr);     
+
+
+var toiletsarray = new Array;    
+
+ for (var i = 0; i < result.length; i++) {
+               toiletsarray.push(result[i].toilet);     
+ }
+
+console.log(cleanscount);    
+
+new Chart(document.getElementById("cleanerschart"),
+{"type":"bar",
+"data":{"labels":[],
+"datasets":[{"label":"Toilet Cleaned Counts for Today",
+"data": [],
+"fill":false,"backgroundColor":["rgba(255, 99, 132, 0.2)","rgba(255, 159, 64, 0.2)","rgba(255, 205, 86, 0.2)","rgba(75, 192, 192, 0.2)","rgba(54, 162, 235, 0.2)","rgba(153, 102, 255, 0.2)","rgba(201, 203, 207, 0.2)"],"borderColor":["rgb(255, 99, 132)","rgb(255, 159, 64)","rgb(255, 205, 86)","rgb(75, 192, 192)","rgb(54, 162, 235)","rgb(153, 102, 255)","rgb(201, 203, 207)"],
+"borderWidth":1}]},
+"options":{"scales":{"yAxes":[{"ticks":{"beginAtZero":true}}]}},
+ "plugins": [{
+        "beforeInit": function(chart, options) {
+           var data = chart.config.data;
+
+    // For each item in your object
+    for (var key in cleanscount) {
+        // This is for security - check `http://stackoverflow.com/a/684692/4864023`
+        if (cleanscount.hasOwnProperty(key)) {
+            // Add the key as a new xAxe label ...
+            data.labels.push(key);
+            // ... and the value as a new data
+            data.datasets[0].data.push(cleanscount[key]);
+        }
+    }
+        }
+    }]
+
+});    
+
+
+new Chart(document.getElementById("cleanerschart2"),
+{"type":"bar",
+"data":{"labels":["Randy Ang", "Jensen Huang", "Jack Ma", "Brandon Li", "Elon Mask"],
+"datasets":[{"label":"Average Cleaning Time for Cleaners",
+"data": totalduration,
+"fill":false,"backgroundColor":["rgba(255, 99, 132, 0.2)","rgba(255, 159, 64, 0.2)","rgba(255, 205, 86, 0.2)","rgba(75, 192, 192, 0.2)","rgba(54, 162, 235, 0.2)","rgba(153, 102, 255, 0.2)","rgba(201, 203, 207, 0.2)"],"borderColor":["rgb(255, 99, 132)","rgb(255, 159, 64)","rgb(255, 205, 86)","rgb(75, 192, 192)","rgb(54, 162, 235)","rgb(153, 102, 255)","rgb(201, 203, 207)"],
+"borderWidth":1}]},
+"options":{"scales":{"yAxes":[{"ticks":{"beginAtZero":true}}]}}
+
+});
+                         
+                }
+            
+
+            })
+})
+   var btnDate = document.getElementById("btnDate");
+btnDate.addEventListener("click",function(e){
+
+    var selectedDate = new Date($("#example-date-input").val());  
+    var selectedDatee = (selectedDate.getMonth() + 1) + "-" + selectedDate.getDate() + "-" +selectedDate.getFullYear();    
+
+     console.log(selectedDatee);  
+
+
+
+
+                         
+                
+            
+
+            
+
+ $.ajax({
+
+                url: '/api/History/' + selectedDatee,
+                dataType: 'json',
+                method: 'get',
+                async: false,
+                success: function (data) {
+
+               toilet1 = document.getElementById('toilet1');
+               recent1 = document.getElementById('recent1');
+
+               toilet2 = document.getElementById('toilet2');
+               recent2 = document.getElementById('recent2');
+
+               toilet3 = document.getElementById('toilet3');
+               recent3 = document.getElementById('recent3');
+
+               toilet4 = document.getElementById('toilet4');
+               recent4 = document.getElementById('recent4');
+               
+               toilet5 = document.getElementById('toilet5');
+               recent5 = document.getElementById('recent5');
+
+    
+
+
+                toilet1.textContent = data[0].toilet;
+                var date1 = data[0].endDate;     
+                var parseddate1 = new Date(date1);    
+var datestring1 = parseddate1.getDate() + "-" + (parseddate1.getMonth() + 1) + "-" + parseddate1.getFullYear() + ", " + parseddate1.getUTCHours() + ":" + parseddate1.getMinutes() + " by " + data[0].name;    
+                recent1.textContent = datestring1;   
+
+                 console.log(parseddate1.toUTCString());    
+
+
+
+               toilet2.textContent = data[1].toilet;
+                var date2 = data[1].endDate;     
+                var parseddate2 = new Date(date2);    
+var datestring2 = parseddate2.getDate() + "-" + (parseddate2.getMonth() + 1) + "-" + parseddate2.getFullYear() + ", " + parseddate2.getUTCHours() + ":" + parseddate2.getMinutes() + " by " + data[1].name;   
+     recent2.textContent = datestring2;     
+               
+
+               toilet3.textContent = data[2].toilet;
+                var date3 = data[2].endDate;     
+                var parseddate3 = new Date(date3);    
+var datestring3 = parseddate3.getDate() + "-" + (parseddate3.getMonth() + 1) + "-" + parseddate3.getFullYear() + ", " + parseddate3.getUTCHours() + ":" + parseddate3.getMinutes() + " by " + data[2].name;     
+               recent3.textContent = datestring3;     
+
+               toilet4.textContent = data[3].toilet;     
+                var date4 = data[3].endDate;     
+                var parseddate4 = new Date(date4);    
+var datestring4 = parseddate4.getDate() + "-" + (parseddate4.getMonth() + 1) + "-" + parseddate4.getFullYear() + ", " + parseddate4.getUTCHours() + ":" + parseddate4.getMinutes() + " by " + data[3].name;   
+               recent4.textContent = datestring4;     
+
+               toilet5.textContent = data[4].toilet;    
+                var date5 = data[4].endDate;     
+                var parseddate5 = new Date(date5);    
+var datestring5 = parseddate5.getDate() + "-" + (parseddate5.getMonth() + 1) + "-" + parseddate5.getFullYear() + ", " + parseddate5.getUTCHours() + ":" + parseddate5.getMinutes() + " by " + data[4].name;   
+               recent5.textContent = datestring5;     
+
+                }
+            
+
+            })
+
+            
+            
+            $.ajax({
+
+                url: '/api/Avg/' + selectedDatee,
+                dataType: 'json',
+                method: 'get',
+                async: false,
+                success: function (data) {
+
+               totalCleaned = document.getElementById('totalCleaned');
+               avgCleaned = document.getElementById('avgCleaned');
+               avgDuration = document.getElementById('avgDuration');
+               cleanRq = document.getElementById('cleanRq');     
+               var timetaken = 0;
+               var requests = new Array;   
+   
+                totalCleaned.textContent = data.length.toString();               
+                avgCleaned.textContent = Math.round(data.length / 4).toString()  ;    
+                for (var i = 0; i < data.length; i++) {
+                timetaken += data[i].duration; console.log(timetaken);
+                }
+                timetaken = timetaken/data.length;    
+                avgDuration.textContent = Math.round(timetaken.toString()).toPrecision(2);    
+                
+                for (var i = 0; i < data.length; i++) {
+               requests.push(data[i].toilet);     
+                }
+                
+                   var counts = {}, max = 0, res;
+    for (var v in requests) {
+      counts[requests[v]] = (counts[requests[v]] || 0) + 1;
+      if (counts[requests[v]] > max) { 
+        max = counts[requests[v]];
+        res = requests[v];
+      }
+
+    }
+    
+cleanRq.textContent = res.toString();      
+                
+
+                
+
+var result = [];var count = 0;   
+data.forEach(function(e) {
+  var c = e.toilet;
+  !this[c] ? (this[c] = e, result.push(this[c])) : this[c].count += e.count
+}, {})
+
+function getItems(input) {
+  var arr = input, obj = new Array;
+  for (var i = 0; i < arr.length; i++) {
+    if (!obj[arr[i].toilet]) {
+      obj[arr[i].toilet] = 1;
+    } else if (obj[arr[i].toilet]) {
+      obj[arr[i].toilet] += 1;
+    }
+  }
+  return obj;
+}
+
+var toiletscount = getItems(data);      
+
+
+
+
+var toiletsarray = new Array;    
+
+ for (var i = 0; i < result.length; i++) {
+               toiletsarray.push(result[i].toilet);     
+ }
+
+console.log(toiletscount);    
+
+new Chart(document.getElementById("toiletschart"),
+{"type":"bar",
+"data":{"labels":[],
+"datasets":[{"label":"Toilet Cleaned Counts for Today",
+"data": [],
+"fill":false,"backgroundColor":["rgba(255, 99, 132, 0.2)","rgba(255, 159, 64, 0.2)","rgba(255, 205, 86, 0.2)","rgba(75, 192, 192, 0.2)","rgba(54, 162, 235, 0.2)","rgba(153, 102, 255, 0.2)","rgba(201, 203, 207, 0.2)"],"borderColor":["rgb(255, 99, 132)","rgb(255, 159, 64)","rgb(255, 205, 86)","rgb(75, 192, 192)","rgb(54, 162, 235)","rgb(153, 102, 255)","rgb(201, 203, 207)"],
+"borderWidth":1}]},
+"options":{"scales":{"yAxes":[{"ticks":{"beginAtZero":true}}]}},
+ "plugins": [{
+        "beforeInit": function(chart, options) {
+           var data = chart.config.data;
+
+    // For each item in your object
+    for (var key in toiletscount) {
+        // This is for security - check `http://stackoverflow.com/a/684692/4864023`
+        if (toiletscount.hasOwnProperty(key)) {
+            // Add the key as a new xAxe label ...
+            data.labels.push(key);
+            // ... and the value as a new data
+            data.datasets[0].data.push(toiletscount[key]);
+        }
+    }
+        }
+    }]
+
+});
+                         
+                }
+            
+
+            })
+
+
+            });
+     
+
+     
+
+$('#example').DataTable( {
+        ajax: "/api/ToiletLog",
+        columns : [ 
+            { data: "ToiletLogId" },
+            { data: "ToiletId" },
+            { data: "CleanerId" },
+            { data: "StartDate" },
+            { data: "EndDate" },
+            { data: "Duration" }
+           
+        ]
+    } );      
+    
+     });     
+
+function updateLogs() {
+
+
+            $.ajax({
+
+                url: '/api/Avg',
+                dataType: 'json',
+                method: 'get',
+                async: false,
+                success: function (data) {
+
+               totalCleaned = document.getElementById('totalCleaned');
+               avgCleaned = document.getElementById('avgCleaned');
+               avgDuration = document.getElementById('avgDuration');
+               cleanRq = document.getElementById('cleanRq');     
+               var timetaken = 0;
+               var requests = new Array;   
+   
+                totalCleaned.textContent = data.length.toString();               
+                avgCleaned.textContent = Math.round(data.length / 4).toString()  ;    
+                for (var i = 0; i < data.length; i++) {
+                timetaken += data[i].duration; console.log(timetaken);
+                }
+                timetaken = timetaken/data.length;    
+                avgDuration.textContent = Math.round(timetaken.toString()).toPrecision(2);    
+                
+                for (var i = 0; i < data.length; i++) {
+               requests.push(data[i].toilet);     
+                }
+                
+                   var counts = {}, max = 0, res;
+    for (var v in requests) {
+      counts[requests[v]] = (counts[requests[v]] || 0) + 1;
+      if (counts[requests[v]] > max) { 
+        max = counts[requests[v]];
+        res = requests[v];
+      }
+
+    }
+    
+cleanRq.textContent = res.toString();      
+                
+
+                
+
+var result = [];var count = 0;   
+data.forEach(function(e) {
+  var c = e.toilet;
+  !this[c] ? (this[c] = e, result.push(this[c])) : this[c].count += e.count
+}, {})
+
+function getItems(input) {
+  var arr = input, obj = new Array;
+  for (var i = 0; i < arr.length; i++) {
+    if (!obj[arr[i].toilet]) {
+      obj[arr[i].toilet] = 1;
+    } else if (obj[arr[i].toilet]) {
+      obj[arr[i].toilet] += 1;
+    }
+  }
+  return obj;
+}
+
+var toiletscount = getItems(data);      
+
+
+
+
+var toiletsarray = new Array;    
+
+ for (var i = 0; i < result.length; i++) {
+               toiletsarray.push(result[i].toilet);     
+ }
+
+console.log(toiletscount);    
+
+new Chart(document.getElementById("toiletschart"),
+{"type":"bar",
+"data":{"labels":[],
+"datasets":[{"label":"Toilet Cleaned Counts for Today",
+"data": [],
+"fill":false,"backgroundColor":["rgba(255, 99, 132, 0.2)","rgba(255, 159, 64, 0.2)","rgba(255, 205, 86, 0.2)","rgba(75, 192, 192, 0.2)","rgba(54, 162, 235, 0.2)","rgba(153, 102, 255, 0.2)","rgba(201, 203, 207, 0.2)"],"borderColor":["rgb(255, 99, 132)","rgb(255, 159, 64)","rgb(255, 205, 86)","rgb(75, 192, 192)","rgb(54, 162, 235)","rgb(153, 102, 255)","rgb(201, 203, 207)"],
+"borderWidth":1}]},
+"options":{"scales":{"yAxes":[{"ticks":{"beginAtZero":true}}]}},
+ "plugins": [{
+        "beforeInit": function(chart, options) {
+           var data = chart.config.data;
+
+    // For each item in your object
+    for (var key in toiletscount) {
+        // This is for security - check `http://stackoverflow.com/a/684692/4864023`
+        if (toiletscount.hasOwnProperty(key)) {
+            // Add the key as a new xAxe label ...
+            data.labels.push(key);
+            // ... and the value as a new data
+            data.datasets[0].data.push(toiletscount[key]);
+        }
+    }
+        }
+    }]
+
+});
+                         
+                }
+            
+
+            })
+
+ $.ajax({
+
+                url: '/api/History',
+                dataType: 'json',
+                method: 'get',
+                async: false,
+                success: function (data) {
+
+               toilet1 = document.getElementById('toilet1');
+               recent1 = document.getElementById('recent1');
+
+               toilet2 = document.getElementById('toilet2');
+               recent2 = document.getElementById('recent2');
+
+               toilet3 = document.getElementById('toilet3');
+               recent3 = document.getElementById('recent3');
+
+               toilet4 = document.getElementById('toilet4');
+               recent4 = document.getElementById('recent4');
+               
+               toilet5 = document.getElementById('toilet5');
+               recent5 = document.getElementById('recent5');
+
+    
+
+
+                toilet1.textContent = data[0].toilet;
+                var date1 = data[0].endDate;     
+                var parseddate1 = new Date(date1);    
+var datestring1 = parseddate1.getDate() + "-" + (parseddate1.getMonth() + 1) + "-" + parseddate1.getFullYear() + ", " + parseddate1.getUTCHours() + ":" + parseddate1.getMinutes() + " by " + data[0].name;    
+                recent1.textContent = datestring1;   
+
+                 console.log(parseddate1.toUTCString());    
+
+
+
+               toilet2.textContent = data[1].toilet;
+                var date2 = data[1].endDate;     
+                var parseddate2 = new Date(date2);    
+var datestring2 = parseddate2.getDate() + "-" + (parseddate2.getMonth() + 1) + "-" + parseddate2.getFullYear() + ", " + parseddate2.getUTCHours() + ":" + parseddate2.getMinutes() + " by " + data[1].name;   
+     recent2.textContent = datestring2;     
+               
+
+               toilet3.textContent = data[2].toilet;
+                var date3 = data[2].endDate;     
+                var parseddate3 = new Date(date3);    
+var datestring3 = parseddate3.getDate() + "-" + (parseddate3.getMonth() + 1) + "-" + parseddate3.getFullYear() + ", " + parseddate3.getUTCHours() + ":" + parseddate3.getMinutes() + " by " + data[2].name;     
+               recent3.textContent = datestring3;     
+
+               toilet4.textContent = data[3].toilet;     
+                var date4 = data[3].endDate;     
+                var parseddate4 = new Date(date4);    
+var datestring4 = parseddate4.getDate() + "-" + (parseddate4.getMonth() + 1) + "-" + parseddate4.getFullYear() + ", " + parseddate4.getUTCHours() + ":" + parseddate4.getMinutes() + " by " + data[3].name;   
+               recent4.textContent = datestring4;     
+
+               toilet5.textContent = data[4].toilet;    
+                var date5 = data[4].endDate;     
+                var parseddate5 = new Date(date5);    
+var datestring5 = parseddate5.getDate() + "-" + (parseddate5.getMonth() + 1) + "-" + parseddate5.getFullYear() + ", " + parseddate5.getUTCHours() + ":" + parseddate5.getMinutes() + " by " + data[4].name;   
+               recent5.textContent = datestring5;     
+
+                }
+            
+
+            })
+
+            
+        }
+</script>
+
+}
+
+
+

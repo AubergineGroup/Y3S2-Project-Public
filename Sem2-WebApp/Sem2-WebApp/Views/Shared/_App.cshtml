@@ -1,0 +1,320 @@
+﻿@{
+    var title = (string)ViewData["Title"];
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>@ViewData["Title"] - Aubergine Console</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/resources/assets/libs/angular_material/angular-material.min.css">
+        <link rel="stylesheet" href="~/resources/assets/icons/fuse-icon-font/style.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Product+Sans">
+        <link rel="stylesheet" href="~/resources/assets/libs/animate.css/animate.min.css">
+        <link rel="stylesheet" href="~/resources/assets/libs/pnotify/pnotify.custom.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/b-1.5.4/b-flash-1.5.4/b-html5-1.5.4/b-print-1.5.4/datatables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css">
+        <link rel="stylesheet" href="~/resources/assets/libs/datatables.net/css/editor.dataTables.min.css">
+        <link rel="stylesheet" href="~/resources/assets/libs/perfect-scrollbar/css/perfect-scrollbar.css">
+        @RenderSection("Nvd3", false)
+        <link rel="stylesheet" href="~/resources/assets/fuse-html/fuse-html.min.css">
+        <link rel="stylesheet" href="~/resources/_scss/main.min.css">
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/resources/assets/libs/angular_material/angular-material.min.css">
+        <link rel="stylesheet" href="~/resources/assets/icons/fuse-icon-font/style.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Product+Sans">
+        <link rel="stylesheet" href="~/resources/assets/libs/animate.css/animate.min.css">
+        <link rel="stylesheet" href="~/resources/assets/libs/pnotify/pnotify.custom.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/b-1.5.4/b-flash-1.5.4/b-html5-1.5.4/b-print-1.5.4/datatables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css">
+        <link rel="stylesheet" href="~/resources/assets/libs/datatables.net/css/editor.dataTables.min.css">
+        <link rel="stylesheet" href="~/resources/assets/libs/perfect-scrollbar/css/perfect-scrollbar.css">
+        @RenderSection("Nvd3", false)
+        <link rel="stylesheet" href="~/resources/assets/fuse-html/fuse-html.min.css">
+        <link rel="stylesheet" href="~/resources/_scss/main.min.css">
+    </environment>
+
+
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/jiawei-cdn/image/upload/v1544262422/smallicon_jzuq1k.png" sizes="192x192">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700italic,700,900,900italic">
+
+    <!-- Style sheets -->
+    <style>
+        [fuse-cloak],
+        .fuse-cloak {
+            display: none !important;
+        }
+
+        #license-footer {
+            -webkit-align-self: flex-end;
+            align-self: flex-end;
+            padding: 16px 32px;
+            width: 100%;
+            text-align: center;
+            font-size: small;
+            border-top: 1px solid #ddd;
+            background-color: #fff;
+            color: #999;
+        }
+
+        .ga-footer-links {
+            font-size: 13px;
+        }
+
+            .ga-footer-links a {
+                text-decoration: none;
+                color: #15c;
+                cursor: pointer;
+            }
+
+                .ga-footer-links a:visited {
+                    color: #61c;
+                }
+
+        .DTED_Lightbox_Close, ::after {
+            box-sizing: content-box;
+        }
+    </style>
+    @RenderSection("Styles", false)
+</head>
+<body class="layout layout-vertical layout-left-navigation layout-below-toolbar layout-below-footer" ng-app="docsApp" ng-cloak>
+    <main>
+        <div id="wrapper">
+            <!-- Sidenav -->
+            <aside id="aside" class="aside aside-left" data-fuse-bar="aside" data-fuse-bar-media-step="md" data-fuse-bar-position="left">
+                <div class="aside-content bg-primary-700 text-auto">
+                    <div class="aside-toolbar">
+                        <div class="logo">
+                            <span class="logo-icon">A</span>
+                            <span class="logo-text" style="font: 400 22.1px 'Product Sans', Arial, Helvetica, sans-serif">Aubergine</span>
+                        </div>
+
+                        <button id="toggle-fold-aside-button" type="button" class="btn btn-icon d-none d-lg-block" data-fuse-aside-toggle-fold>
+                            <i class="icon icon-backburger"></i>
+                        </button>
+                    </div>
+
+                    <ul class="nav flex-column custom-scrollbar" id="sidenav" data-children=".nav-item">
+                        <li class="subheader">
+                            <span>APPS</span>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="@(title == "Dashboard" ? "nav-link ripple active" : "nav-link ripple")" href="@Url.Action("Index", "AdminHome")">
+                                <i class="icon s-4 icon-tile-four"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item" role="tab" id="heading-realtime">
+                            <a class="@(title == "Overview" ? "nav-link ripple with-arrow" : "nav-link ripple with-arrow collapsed")" data-toggle="collapse" data-target="#collapse-realtime" href="#" aria-expanded="false" aria-controls="collapse-realtime">
+                                <i class="icon s-4 icon-clock"></i>
+                                <span>Real-Time</span>
+                            </a>
+
+                            <ul id="collapse-realtime" class="@(title == "Overview" ? "collapse show" : "collapse")" role="tabpanel" aria-labelledby="heading-realtime" data-children=".nav-item">
+                                <li class="nav-item">
+                                    <a class="@(title == "Overview" ? "nav-link ripple active" : "nav-link ripple")" href="@Url.Action("Overview", "AdminHome")">
+                                        <span>Overview</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="@(title == "Cleaners" ? "nav-link ripple active" : "nav-link ripple")" href="@Url.Action("Cleaners", "AdminHome")">
+                                <i class="icon s-4 icon-account"></i>
+                                <span>Cleaners</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="@(title == "Toilets" || title == "Toilet Settings" ? "nav-link ripple active" : "nav-link ripple")" href="@Url.Action("Toilets", "AdminHome")">
+                                <i class="icon s-4 icon-human-male-female"></i>
+                                <span>Toilets</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="@(title == "Schedules" ? "nav-link ripple active" : "nav-link ripple")" href="@Url.Action("Schedules", "AdminHome")">
+                                <i class="icon s-4 icon-calendar"></i>
+                                <span>Schedules</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="@(title == "Analytics"  ? "nav-link ripple active" : "nav-link ripple")" href="@Url.Action("Analytics", "AdminHome")">
+                                <i class="icon s-4 icon-poll-box"></i>
+                                <span>Analytics</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link ripple" href="@Url.Action("Index", "Home")">
+                                <i class="icon s-4 icon-arrow-left"></i>
+                                <span>Back to home</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+
+            <div class="content-wrapper">
+                <!-- Navbar -->
+                <nav id="toolbar" class="bg-white">
+                    <div class="row no-gutters align-items-center flex-nowrap">
+                        <div class="col">
+                            <div class="row no-gutters align-items-center flex-nowrap">
+                                <button type="button" class="toggle-aside-button btn btn-icon d-block d-lg-none" data-fuse-bar-toggle="aside">
+                                    <i class="icon icon-menu"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-auto">
+                            <div class="row no-gutters align-items-center justify-content-end">
+                                <div class="user-menu-button dropdown">
+                                    <div class="dropdown-toggle ripple row align-items-center no-gutters px-2 px-sm-4" role="button" id="dropdownUserMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <div class="avatar-wrapper">
+                                            <img class="avatar" src="~/resources/assets/images/avatars/profile.jpg">
+                                        </div>
+                                        <span class="username mx-3 d-none d-md-block">@User.Identity.Name</span>
+                                    </div>
+
+                                    <div class="dropdown-menu" aria-labelledby="dropdownUserMenu">
+                                        <a class="dropdown-item" href="https://aad.portal.azure.com" target="_blank">
+                                            <div class="row no-gutters align-items-center flex-nowrap">
+                                                <i class="icon-format-list-bulleted"></i>
+                                                <span class="px-3">Azure AD admin center</span>
+                                            </div>
+                                        </a>
+
+                                        <div class="dropdown-divider"></div>
+
+                                        <a asp-area="AzureAD" asp-controller="Account" asp-action="SignOut" class="dropdown-item">
+                                            <div class="row no-gutters align-items-center flex-nowrap">
+                                                <i class="icon-logout"></i>
+                                                <span class="px-3">Sign out</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+                <div class="content custom-scrollbar">
+                    @RenderBody()
+
+                    <!-- Footer -->
+                    <div layout="row" flex="noshrink" layout-align="center center" class="layout-align-center-center layout-row flex-noshrink">
+                        <div id="license-footer" flex="" class="ng-binding flex">
+                            <span>© 2018 Aubergine Group</span>
+                            <span class="ga-footer-links">
+                                |
+                                <a href="@Url.Action("Index", "AdminHome")" class="md-ga-theme">
+                                    Console Home
+                                </a>
+                                |
+                                <a href="https://www.google.com/analytics/tos.html?hl=en_US" target="_blank" class="md-ga-theme">
+                                    Terms of Service
+                                </a>
+                                |
+                                <a href="https://www.google.com/policies/privacy/?hl=en_US" target="_blank" class="md-ga-theme">
+                                    Privacy Policy
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <environment include="Development">
+        <script src="~/resources/assets/libs/jquery/dist/jquery.min.js"></script>
+        <script src="~/resources/assets/libs/angularjs/angular.min.js"></script>
+        <script src="~/resources/assets/libs/angularjs/angular-animate.min.js"></script>
+        <script src="~/resources/assets/libs/angularjs//angular-aria.min.js"></script>
+        <script src="~/resources/assets/libs/angularjs/angular-messages.min.js"></script>
+        <script src="~/resources/assets/libs/angular_material/angular-material.min.js"></script>
+        <script src="~/resources/assets/libs/mobile-detect/mobile-detect.min.js"></script>
+        <script src="~/resources/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+        <script src="~/resources/assets/libs/popper.js/dist/umd/popper.min.js"></script>
+        <script src="~/resources/assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="~/resources/assets/libs/datatables-responsive/js/dataTables.responsive.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/b-1.5.4/b-flash-1.5.4/b-html5-1.5.4/b-print-1.5.4/datatables.min.js"></script>
+        <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+        <script src="~/resources/assets/libs/datatables.net/js/dataTables.editor.min.js"></script>
+        <script src="~/resources/assets/libs/pnotify/pnotify.custom.min.js"></script>
+        <script src="~/resources/assets/fuse-html/fuse-html.min.js"></script>
+        <script src="~/resources/assets/js/main.js"></script>
+        <script src="~/lib/@@aspnet/signalr/dist/browser/signalr.js"></script>
+        <script src="~/resources/assets/js/push-notifications.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/resources/assets/libs/jquery/dist/jquery.min.js"></script>
+        <script src="~/resources/assets/libs/angularjs/angular.min.js"></script>
+        <script src="~/resources/assets/libs/angularjs/angular-animate.min.js"></script>
+        <script src="~/resources/assets/libs/angularjs//angular-aria.min.js"></script>
+        <script src="~/resources/assets/libs/angularjs/angular-messages.min.js"></script>
+        <script src="~/resources/assets/libs/angular_material/angular-material.min.js"></script>
+        <script src="~/resources/assets/libs/mobile-detect/mobile-detect.min.js"></script>
+        <script src="~/resources/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+        <script src="~/resources/assets/libs/popper.js/dist/umd/popper.min.js"></script>
+        <script src="~/resources/assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="~/resources/assets/libs/datatables-responsive/js/dataTables.responsive.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/b-1.5.4/b-flash-1.5.4/b-html5-1.5.4/b-print-1.5.4/datatables.min.js"></script>
+        <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+        <script src="~/resources/assets/libs/datatables.net/js/dataTables.editor.min.js"></script>
+        <script src="~/resources/assets/libs/pnotify/pnotify.custom.min.js"></script>
+        <script src="~/resources/assets/fuse-html/fuse-html.min.js"></script>
+        <script src="~/resources/assets/js/main.js"></script>
+        <script src="~/lib/@@aspnet/signalr/dist/browser/signalr.js"></script>
+        <script src="~/resources/assets/js/push-notifications.js"></script>
+    </environment>
+
+
+    <script>
+        angular.module('docsApp', ['ngMaterial', 'ngMessages']);
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        connection.start().catch(err => console.error(err.toString()));
+
+        async function start() {
+            try {
+                await connection.start();
+                console.log('connected');
+            } catch (err) {
+                console.log(err);
+                setTimeout(() => start(), 5000);
+            }
+        };
+
+        connection.onclose(async () => {
+            await start();
+        });
+    </script>
+
+    @RenderSection("Scripts", false)
+</body>
+</html>

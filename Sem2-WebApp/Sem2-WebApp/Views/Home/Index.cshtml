@@ -1,0 +1,581 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#842d81">
+    <title>Smart Toilet System | Aubergine</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/site.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Product+Sans">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/css/site.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Product+Sans">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    </environment>
+
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/jiawei-cdn/image/upload/v1544262422/smallicon_jzuq1k.png" sizes="192x192">
+</head>
+<body class="home page-template-default page page-id-5 page-parent dashboard wpb-js-composer js-comp-ver-5.4.2 vc_responsive">
+    <nav class="navbar navbar-default navbar-fixed-top navbar-shrink" role="navigation">
+        <div class="container">
+            <div id="logo">
+                <a class="logo" href="#" style="font-family: 'Product Sans'; color: #fff; font-size: 36px; line-height: 44px;">Aubergine</a>
+            </div>
+
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-menu">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+
+            <div id="main-menu" class="collapse navbar-collapse  navbar-right">
+                <ul id="menu-main-menu" class="nav navbar-nav">
+                    <li id="menu-item-405" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-405 one-page-link active">
+                        <a title="Current Page" href="#">HOME</a>
+                    </li>
+
+                    <li class="menu-item">
+                        <a title="Access the console" href="@Url.Action("Index", "AdminHome")">CONSOLE</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="wrapper">
+        <header id="header" class="image-bg">
+            <div class="container">
+                <div class="intro-text">
+                    <h1 class="intro-lead-in" style="color: #ffffff">Smart Toilet System</h1>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <span class="intro-heading" style="color: #ffffff">Currently signed in as <b>@User.FindFirst("name").Value</b></span>
+                        <div class="header-buttons">
+                            <a asp-area="AzureAD" asp-controller="Account" asp-action="SignOut" class="primary-button">SIGN OUT</a>
+                            <a href="/AdminHome" class="secondary-button">CONSOLE</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <span class="intro-heading" style="color: #ffffff">Spend less time worrying about toilets and more focusing on productivity</span>
+                        <div class="header-buttons">
+                            <a asp-area="AzureAD" asp-controller="Account" asp-action="SignIn" class="secondary-button">SIGN IN</a>
+                        </div>
+                    }
+                </div>
+
+                <div class="header-dashboard">
+                    <img src="~/images/headerscreen.png" class="dashboard" alt="">
+                </div>
+            </div>
+
+            <div id="headerbackground">
+                <div class="image-overlay" style="background-image: url(/images/headerbg.jpg)"></div>
+            </div>
+        </header>
+
+        <section id="modern-tools" class="section">
+            <div class="container">
+                <div class="row">
+                    <h2 class="section-heading">Technology</h2>
+                    <span class="separator"></span>
+                    <p class="section-subheading">
+                        With a wide array of sensors, Aubergine's Smart Toilet System makes toilet management simple and
+                        effortless
+                    </p>
+                </div>
+
+                <div class="row">
+                    <div class="vc_row wpb_row vc_row-fluid">
+                        <div class="wpb_column vc_column_container vc_col-sm-3">
+                            <div class="vc_column-inner ">
+                                <div class="wpb_wrapper">
+                                    <div class="key-icon-box" style="text-align: center">
+                                        <i class="fa material-icons">grain</i>
+                                        <h4 class="service-heading">Gas Sensors</h4>
+                                        <p>Detects unpleasant odor in the toilet and alerts cleaners and staff</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wpb_column vc_column_container vc_col-sm-3">
+                            <div class="vc_column-inner ">
+                                <div class="wpb_wrapper">
+                                    <div class="key-icon-box" style="text-align: center">
+                                        <i class="fa fa-users"></i>
+                                        <h4 class="service-heading">People Counter</h4>
+                                        <p>Allows you to know which toilets get more usage than others</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wpb_column vc_column_container vc_col-sm-3">
+                            <div class="vc_column-inner ">
+                                <div class="wpb_wrapper">
+                                    <div class="key-icon-box" style="text-align: center">
+                                        <i class="fa fa-thumbs-o-up"></i>
+                                        <h4 class="service-heading">User Feedback System</h4>
+                                        <p>Lets toilet users rate and request cleaning for toilets</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wpb_column vc_column_container vc_col-sm-3">
+                            <div class="vc_column-inner ">
+                                <div class="wpb_wrapper">
+                                    <div class="key-icon-box" style="text-align: center">
+                                        <i class="fa fa-cloud"></i>
+                                        <h4 class="service-heading">Web Management</h4>
+                                        <p>Enables you to manage multiple toilets anywhere</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="section" style="background-color: #f8f8f8;">
+            <div class="container">
+                <div class="row">
+                    <div class="vc_row wpb_row vc_row-fluid">
+                        <div class="wpb_column vc_column_container vc_col-sm-12">
+                            <div class="vc_column-inner ">
+                                <div class="wpb_wrapper">
+                                    <div class="features-tabs">
+                                        <div id="Managingtools">
+                                            <div class="row">
+                                                <h2 class="section-heading">For Web Browsers</h2>
+                                                <p class="section-subheading ">Easily manage your toilets right from your web browser</p>
+                                            </div>
+
+                                            <ul>
+                                                <li>Professional and easy-to-use</li>
+                                                <li>Setup takes less then ten minutes</li>
+                                                <li>Perfect for any device</li>
+                                                <li>Instantly connects to Windows application</li>
+                                            </ul>
+
+                                            <a href="@Url.Action("Index", "AdminHome")" class="primary-button button-inverse">Access the web console</a>
+                                            <br />
+                                            <label style="font-size: 12px; color: #BDBDBD; padding-top: 10px;">Requires IE9 or higher. Google Chrome 62 or higher recommended.</label>
+                                            <div class="tab-image-container" style="margin-right: -200px;">
+                                                <img width="853" height="492" src="/images/tab1-1.png" class="attachment-full" alt="" srcset="/images/tab1-1.png 853w, /images/tab1-1.png 300w, /images/tab1-1.png 768w"
+                                                     sizes="(max-width: 853px) 100vw, 853px" />
+                                            </div>
+
+                                            <li class="tab col-md-4">
+                                                <a href="#Managingtools">
+                                                    <span class="triangle">
+                                                        <span class="inner-triangle"></span>
+                                                    </span>Web access
+                                                </a>
+                                            </li>
+                                            <br />
+                                        </div>
+
+                                        <div id="MobileSupport">
+                                            <div class="row">
+                                                <h2 class="section-heading">For Mobile</h2>
+                                                <p class="section-subheading ">Available for most Android and iOS browsers</p>
+                                            </div>
+
+                                            <ul>
+                                                <li>Professional and easy-to-use</li>
+                                                <li>Manage your toilets on the go</li>
+                                                <li>Access any notifications about toilets</li>
+                                                <li>Instantly connects to Windows application</li>
+                                            </ul>
+
+                                            <a href="@Url.Action("Index", "AdminHome")" class="primary-button button-inverse">Access the web console</a>
+                                            <br />
+                                            <label style="font-size: 12px; color: #BDBDBD; padding-top: 10px;">Android is a trademark of Google LLC. iOS is a trademark of Apple Inc.</label>
+                                            <div class="tab-image-container" style="margin-right: 60px;">
+                                                <img width="402" height="499" src="/images/tab2-1.png" class="attachment-full" alt="" srcset="/images/tab2-1.png 402w, /images/tab2-1.png 242w"
+                                                     sizes="(max-width: 402px) 100vw, 402px" />
+                                            </div>
+
+                                            <li class="tab col-md-4">
+                                                <a href="#MobileSupport">
+                                                    <span class="triangle">
+                                                        <span class="inner-triangle"></span>
+                                                    </span>Mobile Support
+                                                </a>
+                                            </li>
+                                        </div>
+
+                                        @*<div id="Managingtools2">
+                                            <div class="row">
+                                                <h2 class="section-heading">For Windows </h2>
+                                                <p class="section-subheading ">Simple to use and automatically connects to hardware</p>
+                                            </div>
+
+                                            <ul>
+                                                <li>Effortless connection to hardware</li>
+                                                <li>Easy management of cleaners</li>
+                                                <li>Enables you to manage toilets over the web</li>
+                                                <li>Setup takes less then ten minutes</li>
+                                            </ul>
+
+                                            <a href="@Url.Action("Index", "AdminHome")" class="primary-button button-inverse">Access the web console</a>
+                                            <br />
+                                            <label style="font-size: 12px; color: #BDBDBD; padding-top: 10px;">Requires IE9 or higher. Google Chrome 62 or higher recommended.</label>
+                                            <div class="tab-image-container" style="margin-right: -200px;">
+                                                <img width="853" height="492" src="~/images/tab3-1.png" class="attachment-full" alt="" srcset="~/images/tab3-1.png 853w, ~/images/tab3-1.png 300w, ~/images/tab3-1.png 768w"
+                                                     sizes="(max-width: 853px) 100vw, 853px" />
+                                            </div>
+
+                                            <li class="tab col-md-4">
+                                                <a href="#Managingtools2">
+                                                    <span class="triangle">
+                                                        <span class="inner-triangle"></span>
+                                                    </span>Web access
+                                                </a>
+                                            </li>
+                                            <br />
+                                        </div>*@
+                                        <ul class="tabs" style="margin-top:60px;"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="modern-tools2" class="section">
+            <div class="container">
+                <div class="row">
+                    <h2 class="section-heading">Benefits</h2>
+                    <span class="separator"></span>
+                    <p class="section-subheading">Benefits of Aubergine's industry leading toilet management system</p>
+                </div>
+
+                <div class="row">
+                    <div class="vc_row wpb_row vc_row-fluid">
+                        <div class="wpb_column vc_column_container vc_col-sm-4">
+                            <div class="vc_column-inner ">
+                                <div class="wpb_wrapper">
+                                    <div class="key-icon-box" style="text-align: center">
+                                        <i class="fa fa-smile-o"></i>
+                                        <h4 class="service-heading">Happy Customers</h4>
+                                        <p>Clean toilets results in users having a better experience at your location</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wpb_column vc_column_container vc_col-sm-4">
+                            <div class="vc_column-inner ">
+                                <div class="wpb_wrapper">
+                                    <div class="key-icon-box" style="text-align: center">
+                                        <i class="fa fa-line-chart"></i>
+                                        <h4 class="service-heading">Increased Productivity</h4>
+                                        <p>Cleaners will only be deployed to toilets that needs cleaning</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wpb_column vc_column_container vc_col-sm-4">
+                            <div class="vc_column-inner ">
+                                <div class="wpb_wrapper">
+                                    <div class="key-icon-box" style="text-align: center">
+                                        <i class="fa fa-file-text-o"></i>
+                                        <h4 class="service-heading">Reports</h4>
+                                        <p>Gives you valuable insights about your toilets and cleaning staff</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="section" style="background-color: #f8f8f8;">
+            <div class="container">
+                <div class="row">
+                    <div class="vc_row wpb_row vc_row-fluid">
+                        <div class="wpb_column vc_column_container vc_col-sm-12">
+                            <div class="vc_column-inner ">
+                                <div class="wpb_wrapper">
+                                    <div class="slider testimonials">
+                                        <div class="tt-content">
+                                            <h3>
+                                                <span class="tt-quote">“</span>
+                                                <span class="tt-quote tt-quote-right">”</span>Aubergine's Smart Toilet System has allowed us to pin-point
+                                                attendance & productivity issues easily
+                                            </h3>
+
+                                            <div class="tt-container">
+                                                <h4>Jensen Huang</h4>
+                                                <span class="content">Co-founder, president and CEO, Nvidia Corporation</span>
+                                            </div>
+
+                                            <div class="tt-image">
+                                                <img width="80" height="80" src="~/images/testimonial1-1.jpg" class="attachment-full" alt="" />
+                                            </div>
+                                        </div>
+
+                                        <div class="tt-content">
+                                            <h3>
+                                                <span class="tt-quote">“</span>
+                                                <span class="tt-quote tt-quote-right">”</span>With Aubergine Smart Toilet System, there is no more wasted
+                                                manpower for toilets that are already clean
+                                            </h3>
+
+                                            <div class="tt-container">
+                                                <h4>Raja Koduri</h4>
+                                                <span class="content">Senior Vice President and Chief Architect, Intel Core & Visual Computing Group </span>
+                                            </div>
+
+                                            <div class="tt-image">
+                                                <img width="80" height="80" src="~/images/testimonial2-1.jpg" class="attachment-full" alt="" />
+                                            </div>
+                                        </div>
+
+                                        <div class="tt-content">
+                                            <h3>
+                                                <span class="tt-quote">“</span>
+                                                <span class="tt-quote tt-quote-right">”</span>Aubergine's Smart Toilet System is truly an easy-to-use industry
+                                                leading toilet management system
+                                            </h3>
+
+                                            <div class="tt-container">
+                                                <h4>Lisa Su</h4>
+                                                <span class="content">CEO of Advanced Micro Devices</span>
+                                            </div>
+
+                                            <div class="tt-image">
+                                                <img width="80" height="80" src="~/images/testimonial3-1.jpg" class="attachment-full" alt="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-images"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="clients" class="section">
+            <div class="container">
+                <div class="row">
+                    <div class="vc_row wpb_row vc_row-fluid">
+                        <div class="wpb_column vc_column_container vc_col-sm-12">
+                            <div class="vc_column-inner ">
+                                <div class="wpb_wrapper">
+                                    <div class="slider clients">
+                                        <div class="clients-content">
+                                            <a href="#">
+                                                <img width="126" height="32" src="~/images/logo-smrt.png" class="attachment-full" alt="" />
+                                            </a>
+                                        </div>
+
+                                        <div class="clients-content">
+                                            <a href="#">
+                                                <img width="116" height="27" src="~/images/logo5-1.png" class="attachment-full" alt="" />
+                                            </a>
+                                        </div>
+
+                                        <div class="clients-content">
+                                            <a href="#">
+                                                <img width="113" height="34" src="~/images/logo1-1.png" class="attachment-full" alt="" />
+                                            </a>
+                                        </div>
+
+                                        <div class="clients-content">
+                                            <a href="#">
+                                                <img width="113" height="34" src="~/images/logo1-1.png" class="attachment-full" alt="" />
+                                            </a>
+                                        </div>
+
+                                        <div class="clients-content">
+                                            <a href="#">
+                                                <img width="127" height="28" src="~/images/logo2-1.png" class="attachment-full" alt="" />
+                                            </a>
+                                        </div>
+
+                                        <div class="clients-content">
+                                            <a href="#">
+                                                <img width="144" height="26" src="~/images/logo4-1.png" class="attachment-full" alt="" />
+                                            </a>
+                                        </div>
+
+                                        <div class="clients-content">
+                                            <a href="#">
+                                                <img width="113" height="34" src="~/images/logo1-1.png" class="attachment-full" alt="" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="upper-footer" class="section " style="background-color: #273140; padding-top: 50px; padding-bottom: 50px;">
+            <div class="container">
+                <div class="row">
+                    <div class="vc_row wpb_row vc_row-fluid outer-margin vc_custom_1453652643660">
+                        <div class="wpb_column vc_column_container vc_col-sm-3">
+                            <div class="vc_column-inner vc_custom_1453651835809">
+                                <div class="wpb_wrapper">
+                                    <div class="wpb_single_image wpb_content_element vc_align_left  vc_custom_1453651885487">
+                                        <figure class="wpb_wrapper vc_figure">
+                                            <a href="#" target="_self" class="vc_single_image-wrapper   vc_box_border_grey">
+                                                <span class="logo" href="#" style="font-family: 'Product Sans'; color: #fff; font-size: 36px; line-height: 44px;">Aubergine</span>
+                                            </a>
+                                        </figure>
+                                    </div>
+
+                                    <p style="font-size: 14px; color: #ccc; line-height: 25px; text-align: left" class="vc_custom_heading vc_custom_1453651894213">
+                                        Founded in 2017, Aubergine Group has always been the worldwide leader in software,
+                                        services, devices and solutions that help people and businesses.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wpb_column vc_column_container vc_col-sm-3">
+                            <div class="vc_column-inner ">
+                                <div class="wpb_wrapper"></div>
+                            </div>
+                        </div>
+
+                        <div class="wpb_column vc_column_container vc_col-sm-3">
+                            <div class="vc_column-inner ">
+                                <div class="wpb_wrapper">
+                                    <div class="vc_wp_custommenu wpb_content_element"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wpb_column vc_column_container vc_col-sm-3">
+                            <div class="vc_column-inner ">
+                                <div class="wpb_wrapper">
+                                    <div class="vc_row wpb_row vc_inner vc_row-fluid">
+                                        <div class="wpb_column vc_column_container vc_col-sm-12">
+                                            <div class="vc_column-inner ">
+                                                <div class="wpb_wrapper">
+                                                    <div class="vc_icon_element vc_icon_element-outer vc_icon_element-align-left">
+                                                        <div class="vc_icon_element-inner vc_icon_element-color-white vc_icon_element-size-xs vc_icon_element-style- vc_icon_element-background-color-grey">
+                                                            <span class="vc_icon_element-icon fa fa-phone"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div style="font-size: 14px; color: #ffffff; text-align: left" class="vc_custom_heading">+65 3447 5268</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="vc_row wpb_row vc_inner vc_row-fluid">
+                                        <div class="wpb_column vc_column_container vc_col-sm-12">
+                                            <div class="vc_column-inner ">
+                                                <div class="wpb_wrapper">
+                                                    <div class="vc_icon_element vc_icon_element-outer vc_icon_element-align-left">
+                                                        <div class="vc_icon_element-inner vc_icon_element-color-white vc_icon_element-size-xs vc_icon_element-style- vc_icon_element-background-color-grey">
+                                                            <span class="vc_icon_element-icon fa fa-laptop"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div style="font-size: 14px; color: #ffffff; text-align: left" class="vc_custom_heading">contact@aubergine.site</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="vc_row wpb_row vc_inner vc_row-fluid">
+                                        <div class="wpb_column vc_column_container vc_col-sm-12">
+                                            <div class="vc_column-inner ">
+                                                <div class="wpb_wrapper">
+                                                    <div class="vc_icon_element vc_icon_element-outer vc_icon_element-align-left">
+                                                        <div class="vc_icon_element-inner vc_icon_element-color-white vc_icon_element-size-xs vc_icon_element-style- vc_icon_element-background-color-grey">
+                                                            <span class="vc_icon_element-icon fa fa-map-marker"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div style="font-size: 14px; color: #ffffff; text-align: left" class="vc_custom_heading">
+                                                        8 Sentosa Gateway
+                                                        <br /> Singapore 098269
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer id="footer">
+        <div class="container">
+            <div class="lower-footer">
+                <div class="pull-left">
+                    <span>Copyright© 2018 All rights reserved by Aubergine Group</span>
+                </div>
+
+                <div id="social-icons" class="pull-right">
+                    <a href="https://www.google.com/policies/privacy/" target="_blank">Privacy Policy</a>
+                    <a href="https://www.google.com/policies/terms/" target="_blank">Terms of Use</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <environment include="Development">
+        <script src="~/js/jqueryb8ff.js?ver=1.12.4"></script>
+        <script src="~/js/jquery.easing.min33a6.js?ver=4.9"></script>
+        <script src="~/js/owl.carousel.min33a6.js?ver=4.9"></script>
+        <script src="~/js/jquery.easytabs.min33a6.js?ver=4.9"></script>
+        <script src="~/js/tt_vc_script33a6.js?ver=4.9"></script>
+        <script src="https://res.cloudinary.com/jiawei-cdn/raw/upload/v1513500659/abg-contactform_myx7um.js"></script>
+        <script src="https://res.cloudinary.com/jiawei-cdn/raw/upload/v1513500659/abg-bootstrap_agwxeg.js"></script>
+        <script src="https://res.cloudinary.com/jiawei-cdn/raw/upload/v1513500659/abg_voodjk.js"></script>
+        <script src="https://res.cloudinary.com/jiawei-cdn/raw/upload/v1513500659/abg-embed_wr04el.js"></script>
+        <script src="https://res.cloudinary.com/jiawei-cdn/raw/upload/v1513500659/abg-composer_gy18qe.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/js/jqueryb8ff.js?ver=1.12.4"></script>
+        <script src="~/js/jquery.easing.min33a6.js?ver=4.9"></script>
+        <script src="~/js/owl.carousel.min33a6.js?ver=4.9"></script>
+        <script src="~/js/jquery.easytabs.min33a6.js?ver=4.9"></script>
+        <script src="~/js/tt_vc_script33a6.js?ver=4.9"></script>
+        <script src="https://res.cloudinary.com/jiawei-cdn/raw/upload/v1513500659/abg-contactform_myx7um.js"></script>
+        <script src="https://res.cloudinary.com/jiawei-cdn/raw/upload/v1513500659/abg-bootstrap_agwxeg.js"></script>
+        <script src="https://res.cloudinary.com/jiawei-cdn/raw/upload/v1513500659/abg_voodjk.js"></script>
+        <script src="https://res.cloudinary.com/jiawei-cdn/raw/upload/v1513500659/abg-embed_wr04el.js"></script>
+        <script src="https://res.cloudinary.com/jiawei-cdn/raw/upload/v1513500659/abg-composer_gy18qe.js"></script>
+    </environment>
+</body>
+</html>

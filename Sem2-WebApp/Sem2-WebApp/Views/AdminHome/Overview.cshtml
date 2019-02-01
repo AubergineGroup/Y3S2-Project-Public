@@ -1,0 +1,701 @@
+﻿@{
+    ViewData["Title"] = "Overview";
+}
+
+@section Nvd3 {
+    <link rel="stylesheet" href="~/resources/assets/libs/nvd3/build/nv.d3.min.css">
+}
+
+@section Styles {
+    <style>
+        body {
+            background: #fff;
+        }
+
+        @*TEMPERORY STYLE*@
+        .better-card {
+            box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+        }
+        #chart svg {
+            height: 400px;
+        }
+        #chart2 svg {
+            height: 600px;
+        }
+    </style>
+}
+
+<div id="project-dashboard" class="page-layout simple right-sidebar">
+    <div class="page-content-wrapper custom-scrollbar">
+        <!-- HEADER -->
+        <div class="page-header bg-primary text-auto d-flex flex-column justify-content-between px-6 pt-4 pb-0">
+            <div class="row no-gutters align-items-start flex-nowrap">
+                <div>
+                    <div class="logo-text">
+                        <div class="h2">Overview</div>
+                        <div class="">View toilet sensor data and analysis</div>
+                    </div>
+                </div>
+            </div>
+            <!-- TOILET SELECTOR -->
+            <div class="row no-gutters align-items-center toilet-selection">
+                <div id="selectedToilet" class="selected-toilet h6 px-4 py-2"></div>
+                <div class="toilet-selector" ng-controller="ToiletSelectorController as ctrl">
+                    <md-menu>
+                        <md-button class="md-icon-button" ng-click="$mdMenu.open($event)">
+                            <md-icon aria-label="Open toilets menu" style="color:#fff">more_horiz</md-icon>
+                        </md-button>
+                        <md-menu-content>
+                            <md-menu-item ng-repeat="toilet in toilets">
+                                <md-button ng-click="ctrl.selectToilet(toilet)">{{toilet}}</md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                </div>
+            </div>
+            <!-- / TOILET SELECTOR -->
+        </div>
+        <!-- / HEADER -->
+        <!-- CONTENT -->
+        <div class="page-content">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link btn active fuse-ripple-ready" id="current-status-tab" data-toggle="tab" href="#current-status-tab-pane" role="tab" aria-controls="current-status-tab-pane" aria-expanded="true">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn fuse-ripple-ready" id="history-tab" data-toggle="tab" href="#history-tab-pane" role="tab" aria-controls="history-tab-pane">History</a>
+                </li>
+                @*<li class="nav-item">
+                <a class="nav-link btn fuse-ripple-ready" id="settings-tab" data-toggle="tab" href="#settings-tab-pane" role="tab" aria-controls="settings-tab-pane">Settings</a>
+            </li>
+        <li class="nav-item">
+            <a class="nav-link btn fuse-ripple-ready" id="anal-tab" data-toggle="tab" href="#anal-tab-pane" role="tab" aria-controls="anal-tab-pane">Anal</a>
+        </li>*@
+            </ul>
+            <div class="tab-content" id="maincontent">
+                <!-- HOME TAB -->
+                <div class="tab-pane fade show active p-3" id="current-status-tab-pane" role="tabpanel" aria-labelledby="current-status-tab">
+                    <div class="widget-group row no-gutters">
+                        <!-- CURRENT USERS DISPLAY -->
+                        <div class="col-12 col-sm-6 col-xl-3 p-3">
+                            <div class="widget widget1 better-card">
+                                <div class="widget-header pl-4 pr-2 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <span class="h6">Current Users</span>
+                                    </div>
+                                </div>
+                                <div class="widget-content pt-2 pb-8 d-flex flex-column align-items-center justify-content-center">
+                                    <div class="title" style="color:#0277BD" id="currentUsers">—</div>
+                                    <div class="sub-title h6 text-muted">USERS IN TOILET</div>
+                                </div>
+                                <div class="widget-footer p-4 bg-light row no-gutters align-items-center">
+                                    <span class="text-muted" id="egg">—</span>
+                                    <span id="currentUserThreshold" class="ml-2"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / CURRENT USERS DISPLAY -->
+                        <!-- REQUESTS TO CLEAN TOILET DISPLAY -->
+                        <div class="col-12 col-sm-6 col-xl-3 p-3">
+                            <div class="widget widget2 better-card">
+                                <div class="widget-header pl-4 pr-2 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <span class="h6">Cleaning Requests</span>
+                                    </div>
+                                </div>
+                                <div class="widget-content pt-2 pb-8 d-flex flex-column align-items-center justify-content-center">
+                                    <div class="title" style="color:#0277BD" id="cleaningRequests">—</div>
+                                    <div class="sub-title h6 text-muted">REQUESTS TO CLEAN TOILET</div>
+                                </div>
+                                <div class="widget-footer p-4 bg-light row no-gutters align-items-center">
+                                    <span class="text-muted">Threshold: </span>
+                                    <span id="requestThreshold" class="ml-2"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / REQUESTS TO CLEAN TOILET DISPLAY -->
+                        <!-- CURRENT SMELL VALUE DISPLAY -->
+                        <div class="col-12 col-sm-6 col-xl-3 p-3">
+                            <div class="widget widget3 better-card">
+                                <div class="widget-header pl-4 pr-2 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <span class="h6">Current Smell (%)</span>
+                                    </div>
+                                </div>
+                                <div class="widget-content pt-2 pb-8 d-flex flex-column align-items-center justify-content-center">
+                                    <div class="title" style="color:#0277BD" id="currentSmell">—</div>
+                                    <div class="sub-title h6 text-muted">CURRENT SMELL VALUE</div>
+                                </div>
+                                <div class="widget-footer p-4 bg-light row no-gutters align-items-center">
+                                    <span class="text-muted">Threshold: </span>
+                                    <span id="smellThreshold" class="ml-2"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / CURRENT SMELL VALUE DISPLAY -->
+                        <!-- TOTAL USERS SINCE CLEANING DISPLAY -->
+                        <div class="col-12 col-sm-6 col-xl-3 p-3">
+                            <div class="widget widget4 better-card">
+                                <div class="widget-header pl-4 pr-2 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <span class="h6">Total Users</span>
+                                    </div>
+                                </div>
+                                <div class="widget-content pt-2 pb-8 d-flex flex-column align-items-center justify-content-center">
+                                    <div class="title" style="color:#0277BD" id="totalUsers">—</div>
+                                    <div class="sub-title h6 text-muted">USERS SINCE LAST CLEANING</div>
+                                </div>
+                                <div class="widget-footer p-4 bg-light row no-gutters align-items-center">
+                                    <span class="text-muted">Threshold: </span>
+                                    <span id="userThreshold" class="ml-2"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / TOTAL USERS SINCE CLEANING DISPLAY ( WORK IN PROGRESS ) -->
+                        <!-- HISTORIAL TOILET SENSOR DATA CHART -->
+                        <div class="col-12 col-lg-6 p-3">
+                            <div class="widget widget5 better-card">
+                                <div class="widget-header px-4 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <span class="h6" id="sensorHistoryTitle">Loading...</span>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="widget5-option-change-btn btn btn-link fuse-ripple-ready" onclick="loadSensorHistory();">
+                                            This Week
+                                        </button>
+                                        <button type="button" class="widget5-option-change-btn btn btn-link fuse-ripple-ready" onclick="loadSensorHistory('last');">
+                                            Last Week
+                                        </button>
+                                        <button type="button" class="widget5-option-change-btn btn btn-link fuse-ripple-ready" onclick="loadSensorHistory('2weeks');">
+                                            2 WEEKS AGO
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="widget-content p-4">
+                                    <div id="chart">
+                                        <svg></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / HISTORIAL TOILET SENSOR DATA CHART -->
+                        <!-- CLEANING SCHEDULE TABLE ( WORK IN PROGRESS ) -->
+                        <div class="col-12 col-lg-6 p-3">
+                            <div class="widget widget-7 better-card">
+                                <div class="widget-header px-4 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <span class="h6" id="cleaningScheduleTitle">Scheduled Cleanings</span>
+                                    </div>
+                                </div>
+                                <div class="widget-content p-4">
+                                    <table id="scheduled_table" class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Cleaner Name</th>
+                                                <th>Start Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>...</td>
+                                                <td>...</td>
+                                            </tr>
+                                            <tr>
+                                                <td>...</td>
+                                                <td>...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / CLEANING SCHEDULE TABLE -->
+                    </div>
+                </div>
+                <!-- / HOME TAB -->
+                <!-- HISTORY TAB -->
+                <div class="tab-pane fade p-3" id="history-tab-pane" role="tabpanel" aria-labelledby="history-status-tab">
+                    <div class="widget-group row no-gutters">
+                        <!-- SEARCH BOX -->
+                        <div class="col-12 col-lg-12 p-3">
+                            <div class="widget widget5 better-card">
+                                <div class="widget-header px-4 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <span class="h6" id="sensorHistoryTitle">Search Options</span>
+                                    </div>
+                                </div>
+                                <div class="widget-content p-4">
+                                    <div layout-gt-xs="row" style="margin-bottom: 1.8rem" ng-controller="ToiletSelectorController">
+                                        <div flex-gt-xs>
+                                            <md-datepicker id="from" ng-model="ctrl.from" md-placeholder="Select" md-max-date="ctrl.today" ng-change="" md-open-on-focus></md-datepicker>
+                                            <md-input-container>
+                                                <label>Display scale</label>
+                                                <md-select ng-model="ctrl.scale">
+                                                    <md-option id="scale" ng-value="scale" ng-repeat="scale in scales">{{ scale }}</md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                            <button type="submit" class="btn btn-primary fuse-ripple-ready" style="margin-left:20px;" onclick="loadDetailedSensorHistory()">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / SEARCH BOX -->
+                        <!-- HISTORIAL TOILET SENSOR DATA CHART -->
+                        <div class="col-12 col-lg-12 p-3" id="sensorHistoryDetailedCard" style="display:none">
+                            <div class="widget widget5 better-card">
+                                <div class="widget-header px-4 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <span class="h6" id="sensorHistoryTitle">Sensor History</span>
+                                    </div>
+                                    <div>
+                                    </div>
+                                </div>
+                                <div class="widget-content p-4">
+                                    <div id="chart2">
+                                        <svg></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / HISTORIAL TOILET SENSOR DATA CHART -->
+                    </div>
+                </div>
+                <!-- / HISTORY TAB -->
+                <!-- SETTINGS TAB -->
+                <div class="tab-pane fade p-3" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab">
+                    <div class="widget-group row no-gutters">
+                        <!-- SENSOR SETTINGS CARD -->
+                        <div class="col-12 col-lg-12 p-3">
+                            <div class="widget widget-7 better-card">
+                                <div class="widget-header px-4 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <span class="h6">Sensor Settings</span>
+                                    </div>
+                                </div>
+                                <div class="widget-content p-4">
+                                    <div class="input-group mb-8">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="txtUpdateSensorIDto" aria-label="Sensor ID" maxlength="17" value="">
+                                            <label>Sensor ID</label>
+                                            <a class="form-text text-muted">Where can I find the sensor ID?</a>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary fuse-ripple-ready" onclick="updateCheckSensor();">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / SENSOR SETTINGS CARD -->
+                    </div>
+                </div>
+                <!-- / SETTINGS TAB -->
+                <!-- ANAL TAB -->
+                <div class="tab-pane fade p-3" id="anal-tab-pane" role="tabpanel" aria-labelledby="anal-tab">
+                    <div class="widget-group row no-gutters">
+                        <!-- XXX CARD -->
+                        <div class="col-12 col-lg-12 p-3">
+                            <div class="widget widget-7 better-card">
+                                <div class="widget-header px-4 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <span class="h6"> CARD TITLE </span>
+                                    </div>
+                                </div>
+                                <div class="widget-content p-4">
+                                    <h1> CARD CONTENT </h1>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / XXX CARD -->
+                    </div>
+                </div>
+                <!-- / ANAL TAB -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- SENSOR ID UPDATE MODAL -->
+<div id="sensorCheckModal" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="sensorCheckModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="checkModalContent">
+        </div>
+    </div>
+</div>
+
+<!-- /SENSOR ID UPDATE MODAL -->
+
+@section Scripts {
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.21.6.js" integrity="sha384-eO2lNrJpwcjl1wyOesFrBqxb+WsoMOGJtY1F2FtBo5R45iyL4kWa6NpekqajBsuq" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha384-4i9lUVStsnWRHfmM/frmW3HVdKdd2eRYr/W02LTYWiAdIdrBsSqu0I3UDVlyZrFE" crossorigin="anonymous"></script>
+    <script src="https://res.cloudinary.com/jiawei-cdn/raw/upload/v1544265141/sensorvalueanimator.min_td6s5g.js" integrity="sha384-u3sBGtvYCmObmGwc9FbpurR6Pxq0XqKlx9/qcRLv5My/TU7n+nUKe2CNuXzuvxDy" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
+    <script src="~/resources/assets/libs/d3/d3.min.js"></script>
+    <script src="~/resources/assets/libs/nvd3/build/nv.d3.min.js"></script>
+
+    <script>
+        'use strict';
+        let sensor_channel,
+            sensor_channel_to,
+            channel_update = 0,
+            toiletname,
+            toiletid,
+            updateFreqTimeout,
+            sensorCheckTimeout,
+            sensorUpdateTimeout;
+        var pubnub = new PubNub({ subscribeKey: "[REDACTED]", ssl: !0 });
+
+        angular.module('docsApp').controller('DatepickerController', ['$scope', function ($scope) {
+            this.today = new Date();
+        }]);
+
+        function loadDetailedSensorHistory() {
+            var a = angular.element($("#from")).scope().ctrl.from, c = new Date(a);
+            const s = angular.element($("#scale")).scope().ctrl.scale;
+            a = new Date(a);
+            c.setHours(0, 0, 0, 0);
+            a.setHours(23, 59, 59, 0);
+            c = (new Date(c - 60000 * c.getTimezoneOffset())).toISOString();
+            a = (new Date(a - 60000 * a.getTimezoneOffset())).toISOString();
+            $.ajax({
+                type: "POST", url: "/temp/getsensorhistory", data: { tablename: sensor_channel, datefrom: c, dateto: a, interval: "1h" }, success: function (a) {
+                    a = JSON.parse(a);
+                    for (var c = [], d = [], e = [], f = [], h = function (a) {
+                        var b = ":00 AM";
+                        12 <= a && (b = ":00 PM", a -= 12);
+                        return 0 == a ? "12:00 AM" : a + b;
+                    }, b = 0; b < a.Rows.length; b++) {
+                        c.push({ x: b, y: a.Rows[b].mean_GasValue }), d.push({ x: b, y: a.Rows[b].mean_CurrentUsers }), e.push({ x: b, y: a.Rows[b].mean_TotalUsers }), f.push({ x: b, y: a.Rows[b].mean_Requests });
+                    }
+                    var g = [{ values: c, key: "Gas Value", color: "#d62d20" }, { values: d, key: "Current Users", color: "#008744" }, { values: e, key: "Total Users", color: "#ffa700" }, { values: f, key: "Clean Requests", color: "#0057e7" }];
+                    console.log(g);
+                    nv.addGraph(function () {
+                        var a = nv.models.lineChart().margin({ left: 100 }).useInteractiveGuideline(!0).showLegend(!0).showYAxis(!0).showXAxis(!0);
+                        a.xAxis.axisLabel("Time").tickFormat(h).ticks(24);
+                        a.yAxis.tickFormat(d3.format(".02f"));
+                        d3.select("#chart2 svg").datum(g).call(a);
+                        nv.utils.windowResize(function () {
+                            a.update();
+                        });
+                        return a;
+                    });
+                    $("#sensorHistoryDetailedCard").fadeIn("fast");
+                }
+            });
+        }
+
+        angular.module('docsApp').controller('ToiletSelectorController', ['$scope', '$http', function($scope, $http) {
+            const toiletOwner = "@User.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value";
+            $http.get(`/api/Toilets/${toiletOwner}`).then(function (response) {
+                $scope.toilets = response.data;
+                $scope.scales = ['Day', 'Month', 'Year'];
+                $("#selectedToilet").text(response.data[0]);
+                toiletname = response.data[0];
+                $(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "/temp/GetSensorInformation",
+                        data: { toiletid: response.data[0] },
+                        success: function (data) {
+                            sensor_channel = data[0].sensorId;
+                            toiletid = data[0].toiletId;
+                            $("#txtUpdateSensorIDto").val(sensor_channel);
+                            $("#txtUpdateSensorIDto").addClass('md-has-value');
+                            pubNubListen(sensor_channel);
+                            loadSensorHistory();
+                            loadCleaningSchedule();
+                            getThresholds();
+                        }
+                    });
+                });
+            });
+            this.selectToilet = function (toilet) {
+                toiletname = toilet;
+                $.ajax({
+                    type: "GET",
+                    url: "/temp/GetSensorInformation",
+                    data: { toiletid: toilet },
+                    success: function(data) {
+                        sensor_channel_to = data[0].sensorId;
+                        toiletid = data[0].toiletId;
+                        pubnub.unsubscribe({
+                            channels: [sensor_channel]
+                        });
+                        $("#sensorHistoryDetailedCard").hide();
+                        sensor_channel = sensor_channel_to;
+                        $("#txtUpdateSensorIDto").val(sensor_channel);
+                        sensorDisconnected();
+                        pubNubListen(sensor_channel);
+                        loadSensorHistory();
+                        loadCleaningSchedule();
+                        getThresholds();
+                    }
+                });
+                $("#selectedToilet").text(toilet);
+            };
+        }]);
+
+        let requestThreshold;
+        let gasValueThreshold;
+        let userThreshold;
+
+        function getThresholds() {
+            $.ajax({
+                type: "GET",
+                url: "/temp/GetToiletSettings",
+                data: { toiletid: toiletid },
+                success: function (data) {
+                    requestThreshold = data[0].requestThreshold;
+                    gasValueThreshold = data[0].gasValueThreshold;
+                    userThreshold = data[0].userThreshold;
+                    $("#requestThreshold").text(requestThreshold);
+                    $("#smellThreshold").text(gasValueThreshold);
+                    $("#userThreshold").text(userThreshold);
+                    updateFreqTimeout = data[0].updateFrequency + 5000;
+                    console.log(updateFreqTimeout);
+                }
+            });
+        }
+
+        connection.on("ReceiveMessage",
+            (updateFrequency, fanMode, fanThreshold, userThreshold, gasValueThreshold,
+            requestThreshold) => {
+                this.requestThreshold = requestThreshold;
+                this.gasValueThreshold = gasValueThreshold;
+                this.userThreshold = userThreshold;
+            });
+
+        let shouldSend = false;
+        let thresholds = [];
+
+        function pubNubListen(channel) {
+            pubnub.addListener({
+                message: function (a) {
+                    try {
+                        a = JSON.parse(a.message);
+                    } catch (f) { }
+                    switch (a.type) {
+                        case "sensor_data":
+                            clearTimeout(sensorUpdateTimeout);
+                            $("#currentUsers").animateValue({
+                                toValue: a.sensor_values.current_users
+                            });
+                            $("#cleaningRequests").animateValue({
+                                toValue: a.sensor_values.requests
+                            });
+                            $("#currentSmell").animateValue({
+                                gasValue: true,
+                                toValue: a.sensor_values.gas_value
+                            });
+                            $("#totalUsers").animateValue({
+                                toValue: a.sensor_values.total_users
+                            });
+
+                            if (a.sensor_values.current_users === userThreshold) {
+                                shouldSend = true;
+                                thresholds.push("user");
+                            }
+                            if (a.sensor_values.requests === requestThreshold) {
+                                shouldSend = true;
+                                thresholds.push("request");
+                            }
+                            if (a.sensor_values.gas_value > gasValueThreshold) {
+                                shouldSend = true;
+                                thresholds.push("gas");
+                            }
+
+                            if (shouldSend) {
+                                const args = {
+                                    id: subscriptionId,
+                                    toiletName: toiletname,
+                                    thresholds: thresholds
+                                };
+
+                                $.ajax({
+                                    type: "POST",
+                                    accepts: "application/json",
+                                    url: "/api/WebPush",
+                                    contentType: "application/json",
+                                    data: JSON.stringify(args),
+                                    success: function() {
+                                        console.log("A Web Push Notification was sent successfully.");
+                                        shouldSend = false;
+                                        thresholds = [];
+                                        sensorUpdateTimeout = setTimeout(sensorDisconnected, updateFreqTimeout);
+                                    }
+                                });
+                            } else {
+                                sensorUpdateTimeout = setTimeout(sensorDisconnected, updateFreqTimeout);
+                            }
+                            break;
+                        case "rpi_keepalivereply":
+                            channel_update ? sensorCheckPass() : 0;
+                    }
+                }
+            });
+            pubnub.subscribe({ channels: [channel] });
+            setTimeout(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/temp/publishpornhubmessage",
+                    data: { channel: channel, message: "{ type: 'sensor_data_request' }" }
+                });
+            }, 1000);
+        }
+
+        $("#txtUpdateSensorIDto").keyup(function () {
+            var a = $(this).val().split("-").join("").toUpperCase();
+            0 < a.length && (a = a.match(RegExp(".{1,2}", "g")).join("-"));
+            $(this).val(a);
+        });
+
+        function sensorDisconnected() {
+            $("#currentUsers").text("—");
+            $("#cleaningRequests").text("—");
+            $("#currentSmell").text("—");
+            $("#totalUsers").text("—");
+        }
+
+        $("#egg").click(function () {
+            $('#maincontent').css('background-image', 'url("https://fortunedotcom.files.wordpress.com/2017/11/nvi12_a1.jpg")');
+            $('#maincontent').css('background-size', 'cover');
+        });
+
+        function updateCheckSensor() {
+            channel_update = !0;
+            sensor_channel_to = $('#txtUpdateSensorIDto').val();
+            pubNubListen(sensor_channel_to);
+            var a = Handlebars.template({ compiler: [7, ">= 4.0.0"], main: function (a, b, c, d, e) { return ' <div class="modal-header">\n <h5 class="modal-title">Checking Sensor</h5>\n <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="sensorCheckStop();">\n <span aria-hidden="true">\u00d7</span>\n </button>\n </div>\n <div class="modal-body">\n <p>Please ensure that the sensor is turned on and connected to the internet</p>\n <div class="progress">\n <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%" id="sensorCheckProgress"></div>\n </div>\n </div>\n <div class="modal-footer">\n <button type="button" id="btnCancelSensorCheck" class="btn btn-primary fuse-ripple-ready" onclick="sensorCheckStop();">CANCEL</button>\n </div>'; }, useData: !0 });
+            $("#checkModalContent").html(a());
+            $("#sensorCheckModal").modal("show");
+            sensorCheckTimeout = setTimeout(sensorCheckFail, 10000);
+            $("#sensorCheckProgress").animate({ width: "100%" }, 9000);
+            $.ajax({
+                type: "POST",
+                url: "/temp/publishpornhubmessage",
+                data: { channel: sensor_channel_to, message: "{ type: 'rpi_keepalivecheck' }"}
+            });
+        }
+
+        function sensorCheckFail() {
+            pubnub.unsubscribe({
+                channels: [sensor_channel_to]
+            });
+            channel_update = 0;
+            var a = Handlebars.template({ compiler: [7, ">= 4.0.0"], main: function (a, b, c, d, e) { return '\n <div class="modal-header">\n <h5 class="modal-title">Check failed</h5>\n <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n <span aria-hidden="true">\u00d7</span>\n </button>\n </div>\n <div class="modal-body">\n <p>Could not establish a connection with the sensor, check the Sensor ID and internet connection and try again</p>\n </div>\n <div class="modal-footer">\n <button type="button" id="btnRetrySensorCheck" class="btn btn-primary fuse-ripple-ready" onclick="updateCheckSensor();">RETRY</button>\n </div>'; }, useData: !0 });
+            $("#checkModalContent").html(a());
+        }
+
+        function sensorCheckPass() {
+            pubnub.unsubscribe({
+                channels: [sensor_channel_to]
+            });
+            $.ajax({
+                type: "POST",
+                url: "/temp/UpdateSensorChannelID",
+                data: { toiletid: toiletid, sensorchannel: sensor_channel_to}
+            });
+            channel_update = 0;
+            var a = Handlebars.template({ compiler: [7, ">= 4.0.0"], main: function (a, b, c, d, e) { return ' <div class="modal-header">\n <h5 class="modal-title">Success</h5>\n <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n <span aria-hidden="true">\u00d7</span>\n </button>\n </div>\n <div class="modal-body">\n <p>The sensor has been assigned to this toilet</p>\n </div>\n <div class="modal-footer">\n <button type="button" id="btnCloseSensorCheck" class="btn btn-primary fuse-ripple-ready" data-dismiss="modal">DONE</button>\n </div>'; }, useData: !0 });
+            $("#checkModalContent").html(a());
+            clearTimeout(sensorCheckTimeout);
+            pubnub.unsubscribe({
+                channels: [sensor_channel]
+            });
+            sensor_channel = sensor_channel_to;
+            pubNubListen(sensor_channel);
+            loadSensorHistory();
+            loadCleaningSchedule();
+            getThresholds();
+        }
+
+        function sensorCheckStop() {
+            pubnub.unsubscribe({
+                channels: [sensor_channel_to]
+            });
+            channel_update = 0;
+            clearTimeout(sensorCheckTimeout);
+            $("#sensorCheckModal").modal("hide");
+        };
+
+        //todo
+        function loadCleaningSchedule() {
+            $.post('/Temp/GetUpcomingToiletSchedules', { toiletid: toiletid },
+                function (returnedData) {
+                    console.table(returnedData);
+                    var tables = $.fn.dataTable.fnTables(true);
+                    $(tables).each(function () {
+                        $(this).dataTable().fnDestroy();
+                    });
+                    $('#scheduled_table').DataTable({
+                        "bLengthChange": false,
+                        "bFilter": false,
+                        "bPaginate": false,
+                        "bInfo": false,
+                        rowId: 'cleanerId',
+                        data: returnedData,
+                        columns: [
+                            { data: 'cleaner_name' },
+                            {
+                                "mData": 'cleanerName',
+                                "mRender": function (x, y, full) {
+                                    return moment(full['start_date']).fromNow();
+                                }
+                            }
+                        ]
+                    });
+                });
+        }
+
+        function loadSensorHistory(c) {
+            var a = new Date, b = new Date;
+            switch (c) {
+                case "last":
+                    a.setDate(a.getDate() - 7);
+                    b.setDate(b.getDate() - 7);
+                    $('#sensorHistoryTitle').text("Sensor History Last Week");
+                    b.setDate(b.getDate() - (b.getDay() - 7) % 7);
+                    break;
+                case "2weeks":
+                    a.setDate(a.getDate() - 14), b.setDate(b.getDate() - 14);
+                    $('#sensorHistoryTitle').text("Sensor History Two Weeks Ago");
+                    b.setDate(b.getDate() - (b.getDay() - 7) % 7);
+                    break;
+                default:
+                    $('#sensorHistoryTitle').text("Sensor History This Week");
+            }
+
+            a.setHours(0, 0, 0, 0);
+            b.setHours(23, 59, 59, 0);
+            a.setDate(a.getDate() - (a.getDay() + 6) % 7);
+            a = (new Date(a - 60000 * b.getTimezoneOffset())).toISOString();
+            b = (new Date(b - 60000 * b.getTimezoneOffset())).toISOString();
+
+            var gas = [], user = [], totaluser = [], request = [];
+
+            $.ajax({
+                type: "POST", url: "/temp/getsensorhistory", data: { tablename: sensor_channel, datefrom: a, dateto: b, interval: "1d" }, success: function (e) {
+                    e = JSON.parse(e);
+                    console.log(e);
+                    for (var d = { 0: "Mon", 1: "Tue", 2: "Wed", 3: "Thur", 4: "Fri", 5: "Sat", 6: "Sun" }, c = 0; 7 > c; c++) {
+                        "undefined" === typeof e.Rows[c] ? (gas.push({ x: d[c], y: 0 }), user.push({ x: d[c], y: 0 }), totaluser.push({ x: d[c], y: 0 }), request.push({ x: d[c], y: 0 })) : (gas.push({ x: d[c], y: e.Rows[c].mean_GasValue }), user.push({ x: d[c], y: e.Rows[c].mean_CurrentUsers }), totaluser.push({ x: d[c], y: e.Rows[c].mean_TotalUsers }), request.push({ x: d[c], y: e.Rows[c].mean_Requests }));
+                    }
+
+                    var data = [{ values: user, key: "Current Users", color: "#008744" }, { values: request, key: "Clean Requests", color: "#0057e7" }, { values: gas, key: "Gas Value", color: "#d62d20" }, { values: totaluser, key: "Total Users", color: "#ffa700" }];
+
+                    nv.addGraph(function () {
+                        var weeklysensorchart = nv.models.multiBarChart();
+                        weeklysensorchart.reduceXTicks(!1);
+                        weeklysensorchart.xAxis.tickFormat(function (weeklysensorchart) {
+                            return weeklysensorchart;
+                        }).ticks(7);
+                        weeklysensorchart.yAxis.tickFormat(d3.format(",.1f"));
+                        d3.select("#chart svg").datum(data).transition().duration(500).call(weeklysensorchart);
+                        nv.utils.windowResize(weeklysensorchart.update);
+                        return weeklysensorchart;
+                    });
+                }
+            });
+        };
+    </script>
+}

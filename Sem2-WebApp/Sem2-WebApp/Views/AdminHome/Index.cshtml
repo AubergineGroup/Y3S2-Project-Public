@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@section Nvd3 {
+    <link rel="stylesheet" href="~/resources/assets/libs/nvd3/build/nv.d3.min.css">
+}
+
+
+<div id="project-dashboard" class="page-layout simple full-width">
+    <div class="page-content-wrapper custom-scrollbar">
+        <!-- HEADER -->
+        <div class="page-header bg-primary text-auto d-flex flex-column justify-content-between px-6 pt-4 pb-0">
+            <div class="row no-gutters align-items-start flex-nowrap">
+                <div>
+                    <span class="h2">Welcome, @User.FindFirst("name").Value</span>
+                </div>
+            </div>
+        </div>
+        <!-- / HEADER -->
+        <!-- CONTENT -->
+        <div class="page-content">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link btn active fuse-ripple-ready" id="current-status-tab" data-toggle="tab" href="#current-status-tab-pane" role="tab" aria-controls="current-status-tab-pane" aria-expanded="true">Overview</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="maincontent">
+                <!-- HOME TAB -->
+                <div class="tab-pane fade show active p-3" id="current-status-tab-pane" role="tabpanel" aria-labelledby="current-status-tab">
+                    <div class="widget-group row no-gutters">
+                        <div class="col-12 col-sm-6 col-xl-3 p-3">
+                            <div class="widget widget5 card bg-primary text-auto">
+                                <div class="widget-header pl-4 pr-2 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <div class="row no-gutters align-items-center">
+                                            <i class="icon-bell-ring-outline mr-2"></i>
+                                            <span class="h6">Average Requests</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="widget-content p-4 align-items-center">
+                                    <span class="h4" id="mean_requests">—</span>
+                                    <span class="h5"> requests</span>
+                                </div>
+                                <div class="widget-footer p-4 text-muted">
+                                    Times people have requested for toilet to be cleaned
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-xl-3 p-3">
+                            <div class="widget widget5 card bg-primary text-auto">
+                                <div class="widget-header pl-4 pr-2 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <div class="row no-gutters align-items-center">
+                                            <i class="icon-blur mr-2"></i>
+                                            <span class="h6">Average Gas Value</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="widget-content p-4 align-items-center">
+                                    <span class="h4" id="mean_smell">—</span>
+                                </div>
+                                <div class="widget-footer p-4 text-muted">
+                                    Average gas value recorded for all toilets
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-xl-3 p-3">
+                            <div class="widget widget5 card bg-primary text-auto">
+                                <div class="widget-header pl-4 pr-2 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <div class="row no-gutters align-items-center">
+                                            <i class="icon-blur-linear mr-2"></i>
+                                            <span class="h6">Maximum Gas Value</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="widget-content p-4 align-items-center">
+                                    <span class="h4" id="max_smell">—</span>
+                                </div>
+                                <div class="widget-footer p-4 text-muted">
+                                    Maximum gas value recorded for all toilets
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-xl-3 p-3">
+                            <div class="widget widget5 card bg-primary text-auto">
+                                <div class="widget-header pl-4 pr-2 row no-gutters align-items-center justify-content-between">
+                                    <div class="col">
+                                        <div class="row no-gutters align-items-center">
+                                            <i class="icon-account-multiple mr-2"></i>
+                                            <span class="h6">Average Users</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="widget-content p-4 align-items-center">
+                                    <span class="h4" id="mean_users">—</span>
+                                    <span class="h5"> users</span>
+                                </div>
+                                <div class="widget-footer p-4 text-muted">
+                                    Average users using a toilet
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            $.post('/Temp/GetSensorDailyStats', { toiletid: "UiTIFQta/hKIYBC7JoEiLGAuBjfiOmSP/to1n5fMiqc=", datefrom: "2017-01-14T00:00:00.000Z", dateto: "2019-01-20T23:59:59.000Z" },
+                function (data) {
+                    const toiletInfo = JSON.parse(data);
+                    console.log(toiletInfo);
+                    $("#times_cleaned").html(toiletInfo.cleaned_count);
+                    $("#mean_requests").html(toiletInfo.mean_requests.toFixed(1));
+                    $("#mean_smell").html(toiletInfo.mean_gas.toFixed(1) + '%');
+                    $("#max_smell").html(toiletInfo.max_gas.toFixed(1) + '%');
+                    $("#mean_users").html(toiletInfo.mean_users.toFixed(0));
+                    $("#users_uncleaned").html(toiletInfo.mean_total_users.toFixed(0));
+                });
+        })();
+    </script>
+}

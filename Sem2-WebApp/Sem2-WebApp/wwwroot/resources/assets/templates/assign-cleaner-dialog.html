@@ -1,0 +1,40 @@
+﻿<md-dialog aria-label="Assign a cleaner">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Assign a cleaner</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="cancel()">
+        <md-icon aria-label="Close dialog">close</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+
+  <md-dialog-content>
+    <div class="md-dialog-content">
+      <form name="assignCleanerForm">
+        <div layout="column">
+          <md-input-container class="md-block">
+            <label>Toilet</label>
+            <md-select ng-model="toilet">
+              <md-option ng-value="toilet" ng-repeat="toilet in toilets">{{toilet}}</md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        
+        <div layout="column">
+          <md-input-container class="md-block">
+            <label>Cleaner</label>
+            <md-select ng-model="cleaner" md-on-open="loadAvailableCleaners()">
+              <md-option ng-value="cleaner" ng-repeat="cleaner in cleaners">{{cleaner.firstName + " " + cleaner.lastName}}</md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+      </form>
+    </div>
+  </md-dialog-content>
+
+  <md-dialog-actions>
+    <md-button ng-click="cancel()">Cancel</md-button>
+    <md-button class="md-primary" ng-click="assignCleaner()" ng-disabled="!toilet || !cleaner">Assign</md-button>
+  </md-dialog-actions>
+</md-dialog>

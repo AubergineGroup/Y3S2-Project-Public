@@ -1,0 +1,253 @@
+﻿@using Microsoft.AspNetCore.Routing
+@{
+    ViewData["Title"] = "Toilet Settings";
+}
+
+@section Styles {
+    <style>
+        .dataTables_wrapper {
+            display: block !important;
+        }
+
+        div.DTED_Lightbox_Background {
+            z-index: 1038 !important;
+        }
+
+        div.DTED_Lightbox_Wrapper {
+            z-index: 1039 !important;
+        }
+
+        div.DTE button.btn, div.DTE div.DTE_Form_Buttons button {
+            padding: 0 1.6rem !important;
+        }
+
+        div.dt-button-info {
+            z-index: 1011 !important;
+        }
+
+        .ab-wf-k-Sl {
+            font-weight: bold;
+            margin-top: 1em;
+        }
+    </style>
+}
+
+    <div class="doc data-table-doc page-layout simple full-width">
+        <!-- Header -->
+        <div class="page-header bg-primary text-auto p-6 row no-gutters align-items-center justify-content-between">
+            <div class="row no-gutters align-items-center">
+                <a href="@Url.Action("Toilets", "AdminHome")" class="btn btn-icon mr-4">
+                    <i class="icon icon-arrow-left"></i>
+                </a>
+                <h1 class="doc-title h4" id="content">Toilet settings</h1>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="page-content p-6">
+            <div class="content">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-block" style="padding: 1.6rem;">
+                                <table id="tblToiletSettings" class="table table-hover table-responsive-md">
+                                    <thead>
+                                        <tr>
+                                            <th class="secondary-text">
+                                                <div class="table-header">
+                                                    <span class="column-title">ID</span>
+                                                </div>
+                                            </th>
+
+                                            <th class="secondary-text">
+                                                <div class="table-header">
+                                                    <span class="column-title">Toilet ID</span>
+                                                </div>
+                                            </th>
+
+                                            <th class="secondary-text">
+                                                <div class="table-header">
+                                                    <span class="column-title">Update Frequency (ms)</span>
+                                                </div>
+                                            </th>
+
+                                            <th class="secondary-text">
+                                                <div class="table-header">
+                                                    <span class="column-title">Fan Mode</span>
+                                                </div>
+                                            </th>
+
+                                            <th class="secondary-text">
+                                                <div class="table-header">
+                                                    <span class="column-title">Fan Threshold</span>
+                                                </div>
+                                            </th>
+
+                                            <th class="secondary-text">
+                                                <div class="table-header">
+                                                    <span class="column-title">User Threshold</span>
+                                                </div>
+                                            </th>
+
+                                            <th class="secondary-text">
+                                                <div class="table-header">
+                                                    <span class="column-title">Gas Value Threshold (%)</span>
+                                                </div>
+                                            </th>
+
+                                            <th class="secondary-text">
+                                                <div class="table-header">
+                                                    <span class="column-title">Request Threshold</span>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+    </div>
+
+@section Scripts {
+    <script>
+        var editor;
+
+        $(document).ready(function() {
+            editor = new $.fn.dataTable.Editor({
+                ajax: "/api/ToiletSettings/@Context.GetRouteData().Values["id"]",
+                table: "#tblToiletSettings",
+                fields: [{
+                        label: "Update frequency (ms):",
+                        name: "UpdateFrequency",
+                        attr: {
+                            type: "number",
+                            min: "1000",
+                            max: "15000"
+                        },
+                        def: "1000"
+                    }, {
+                        label: "Fan mode:",
+                        name: "FanMode",
+                        type: "select",
+                        options: [
+                            "Auto",
+                            "On",
+                            "Off"
+                        ]
+                    }, {
+                        label: "Fan threshold:",
+                        name: "FanThreshold",
+                        attr: {
+                            type: "number",
+                            min: "40",
+                            max: "100"
+                        },
+                        def: "40"
+                    }, {
+                        label: "User threshold:",
+                        name: "UserThreshold",
+                        attr: {
+                            type: "number",
+                            min: "20",
+                            max: "100"
+                        },
+                        def: "20"
+                    }, {
+                        label: "Gas value threshold (%):",
+                        name: "GasValueThreshold",
+                        attr: {
+                            type: "number",
+                            min: "60",
+                            max: "100"
+                        },
+                        def: "60"
+                    }, {
+                        label: "Request threshold:",
+                        name: "RequestThreshold",
+                        attr: {
+                            type: "number",
+                            min: "10",
+                            max: "100"
+                        },
+                        def: "10"
+                    }
+                ],
+                i18n: {
+                    edit: {
+                        title: "Edit toilet settings",
+                        submit: "Save"
+                    }
+                }
+            });
+
+            $("#tblToiletSettings").DataTable({
+                dom: "Bfrtip",
+                ajax: "/api/ToiletSettings/@Context.GetRouteData().Values["id"]",
+                columns: [
+                    { data: "ToiletSettingsId" },
+                    { data: "ToiletId" },
+                    { data: "UpdateFrequency" },
+                    { data: "FanMode" },
+                    { data: "FanThreshold" },
+                    { data: "UserThreshold" },
+                    { data: "GasValueThreshold" },
+                    { data: "RequestThreshold" }
+                ],
+                ordering: false,
+                searching: false,
+                select: true,
+                buttons: [
+                    { extend: "edit", editor: editor }
+                ],
+                language: {
+                    emptyTable: "Toilet Id '@Context.GetRouteData().Values["id"]' not found"
+                }
+            });
+
+            editor.on('preSubmit', function (e, data, action) {
+                if (action === "edit") {
+                    const updateFrequency = data.data["row_1"]["UpdateFrequency"];
+                    const fanMode = data.data["row_1"]["FanMode"];
+                    const fanThreshold = data.data["row_1"]["FanThreshold"];
+                    const userThreshold = data.data["row_1"]["UserThreshold"];
+                    const gasValueThreshold = data.data["row_1"]["GasValueThreshold"];
+                    const requestThreshold = data.data["row_1"]["RequestThreshold"];
+
+                    connection.invoke("SendMessage",
+                        updateFrequency,
+                        fanMode,
+                        fanThreshold,
+                        userThreshold,
+                        gasValueThreshold,
+                        requestThreshold).catch(err => {
+                        console.error(err.toString());
+                        return false;
+                    });
+                }
+            });
+
+            editor.on('submitSuccess', function(e, json, data, action) {
+                if (action === "edit") {
+                    new PNotify({
+                        text: 'Toilet settings saved',
+                        buttons: {
+                            closer: false,
+                            sticker: false
+                        },
+                        animate: {
+                            animate: true,
+                            in_class: 'slideInUp',
+                            out_class: 'slideOutDown'
+                        },
+                        addclass: 'md stack-bottomleft',
+                        delay: 2750
+                    });
+                }
+            });
+        });
+    </script>
+}

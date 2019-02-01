@@ -1,0 +1,673 @@
+﻿@{
+    ViewData["Title"] = "Cleaners";
+}
+
+@section Styles {
+    <style>
+        .tabsDynamicHeight md-content {
+            background-color: transparent !important;
+        }
+
+        .tabsDynamicHeight md-content md-tabs {
+            background: #f6f6f6;
+        }
+
+        .tabsDynamicHeight md-content md-tabs md-tabs-wrapper {
+            background: white;
+        }
+
+        .dataTables_wrapper {
+            display: block !important;
+        }
+
+        div.DTED_Lightbox_Background {
+            z-index: 1038 !important;
+        }
+
+        div.DTED_Lightbox_Wrapper {
+            z-index: 1039 !important;
+        }
+
+        div.DTE button.btn, div.DTE div.DTE_Form_Buttons button {
+            padding: 0 1.6rem !important;
+        }
+
+        div.dt-button-info {
+            z-index: 1011 !important;
+        }
+
+        .md-toolbar-tools > .md-button:last-child {
+            margin-right: -8px !important;
+        }
+
+        .ab-wf-k-Sl {
+            font-weight: bold;
+            margin-top: 1em;
+        }
+    </style>
+}
+
+<div class="doc data-table-doc page-layout simple full-width">
+    <!-- Header -->
+    <div class="page-header bg-primary text-auto p-6 row no-gutters align-items-center">
+        <h1 class="doc-title h4" id="content">Total cleaners: <span id="totalCleaners"></span></h1>
+    </div>
+
+    <!-- Content -->
+    <div class="tabsDynamicHeight">
+        <md-content>
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="cleaners">
+                    <div class="page-content p-6">
+                        <div class="content">
+                            <div class="row">
+                                <div class="col-12" style="margin-bottom: 1.8rem">
+                                    <p>
+                                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseFilterCleaners" aria-expanded="false"
+                                                aria-controls="collapseFilterCleaners">
+                                            <i class="fa icon-magnify left"></i> Filter cleaners
+                                        </button>
+                                    </p>
+
+                                    <div class="collapse" id="collapseFilterCleaners">
+                                        <section class="section">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <div class="card">
+                                                        <div class="card-block" style="padding: 1.6rem">
+                                                            <div class="row">
+                                                                <div class="col-md-6" data-column="1">
+                                                                    <div class="form-group">
+                                                                        <input type="text" id="name" class="form-control" />
+                                                                        <label for="name">Name</label>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-6" data-column="2">
+                                                                    <div class="form-group">
+                                                                        <input type="text" id="email" class="form-control" />
+                                                                        <label for="email">Email</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-md-6" data-column="3">
+                                                                    <div class="form-group">
+                                                                        <input type="text" id="phoneNumber" class="form-control" />
+                                                                        <label for="phoneNumber">Phone Number</label>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-6" data-column="4">
+                                                                    <div class="form-group">
+                                                                        <input type="text" id="rfid" class="form-control" />
+                                                                        <label for="rfid">RFID</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-md-6" data-column="5">
+                                                                    <div class="form-group">
+                                                                        <input type="text" id="status" class="form-control" />
+                                                                        <label for="status">Status</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-md-12 text-center">
+                                                                    <button id="btnResetFilters" class="btn btn-primary waves-effect waves-light" type="button">Reset filters</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-block" style="padding: 1.6rem;">
+                                            <table id="tblCleaners" class="table table-hover table-responsive-md">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="secondary-text">
+                                                            <div class="table-header">
+                                                                <span class="column-title">ID</span>
+                                                            </div>
+                                                        </th>
+
+                                                        <th class="secondary-text">
+                                                            <div class="table-header">
+                                                                <span class="column-title">Name</span>
+                                                            </div>
+                                                        </th>
+
+                                                        <th class="secondary-text">
+                                                            <div class="table-header">
+                                                                <span class="column-title">Email</span>
+                                                            </div>
+                                                        </th>
+
+                                                        <th class="secondary-text">
+                                                            <div class="table-header">
+                                                                <span class="column-title">Phone</span>
+                                                            </div>
+                                                        </th>
+
+                                                        <th class="secondary-text">
+                                                            <div class="table-header">
+                                                                <span class="column-title">RFID</span>
+                                                            </div>
+                                                        </th>
+
+                                                        <th class="secondary-text">
+                                                            <div class="table-header">
+                                                                <span class="column-title">Status</span>
+                                                            </div>
+                                                        </th>
+
+                                                        <th class="secondary-text">
+                                                            <div class="table-header">
+                                                                <span class="column-title">Cleaned Count</span>
+                                                            </div>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </md-tab>
+
+                <md-tab label="cleaner performance">
+                    <div class="page-content p-">
+                        <div class="content">
+                            <div class="row">
+                                <div class="col-6">
+                                    <table class="table" style="text-align:center;" id="tempTable">
+                                       
+                                    </table>
+
+                   
+
+                            
+                              
+                                </div>  <div class="col-6">
+                                    <select id="brlist" style="height:30px;  width:100px;">
+                                        <option value="2017">2017</option>
+                                        <option value="2018">2018</option>
+                                    </select>
+                                    <select id="mthli" style="height:30px;  width:100px;">
+                                        <option value="Jan">Jan</option>
+                                        <option value="Feb">Feb</option>
+                                         <option value="Mar">Mar</option>
+                                        <option value="Apr">Apr</option>
+                                         <option value="May">May</option>
+                                        <option value="Jun">Jun</option>
+                                         <option value="Jul">Jul</option>
+                                        <option value="Aug">Aug</option>
+                                         <option value="Sep">Sep</option>
+                                        <option value="Oct">Oct</option>
+                                         <option value="Nov">Nov</option>
+                                        <option value="Dec">Dec</option>     
+                                    </select>
+                                    <canvas id="ratingchart" style="width:100; height:100"></canvas>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </md-tab>
+            </md-tabs>
+        </md-content>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        connection.on("ReloadTable", () => {
+            table.ajax.reload();
+        });
+
+        var editor;
+        var table;
+
+        $(document).ready(function () {
+            editor = new $.fn.dataTable.Editor({
+                ajax: "/api/Cleaners",
+                table: "#tblCleaners",
+                fields: [{
+                        label: "First name:",
+                        name: "FirstName"
+                    }, {
+                        label: "Last name:",
+                        name: "LastName"
+                    }, {
+                        label: "Email:",
+                        name: "Email",
+                        attr: {
+                            type: "email"
+                        }
+                    }, {
+                        label: "Phone number:",
+                        name: "PhoneNumber"
+                    }, {
+                        label: "RFID:",
+                        name: "Rfid",
+                        fieldInfo: "Leave blank if no card"
+                    }, {
+                        label: "Status:",
+                        name: "Status",
+                        type: "select",
+                        options: [
+                            "Available",
+                            "Busy",
+                            "On break",
+                            "Unavailable"
+                        ]
+                    }
+                ],
+                i18n: {
+                    create: {
+                        title: "Add a new cleaner",
+                        submit: "Add"
+                    },
+                    edit: {
+                        title: "Edit cleaner details",
+                        submit: "Save"
+                    },
+                    remove: {
+                        title: "Delete cleaner",
+                        submit: "Delete",
+                        confirm: {
+                            _: "Are you sure you want to delete %d cleaners?" +
+                                "<div class='ab-wf-k-Sl'>Warning: You can’t undo this action.</div>",
+                            1: "Are you sure you want to delete this cleaner?" +
+                                "<div class='ab-wf-k-Sl'>Warning: You can’t undo this action.</div>"
+                        }
+                    }
+                }
+            });
+
+            table = $("#tblCleaners").DataTable({
+                dom: "Bfrtip",
+                ajax: "/api/Cleaners",
+                columns: [
+                    { data: "CleanerId" },
+                    {
+                        data: null, render: function (data) {
+                            // Combine the first and last names into a single table field.
+                            return `${data.FirstName} ${data.LastName}`;
+                        }
+                    },
+                    { data: "Email" },
+                    { data: "PhoneNumber" },
+                    { data: "Rfid" },
+                    { data: "Status" },
+                    { data: "CleanedCount" }
+                ],
+                select: true,
+                buttons: [
+                    { extend: "create", editor: editor },
+                    { extend: "edit", editor: editor },
+                    { extend: "remove", editor: editor }
+                ],
+                search: {
+                    caseInsensitive: false
+                },
+                language: {
+                    "emptyTable": "No cleaners added"
+                },
+                initComplete: function () {
+                    $("#totalCleaners").text(table.data().count());
+                }
+            });
+
+            editor.on('initEdit', function (e, node, data, items, type) {
+                if (data["Rfid"] === "No card registered") {
+                    editor.set('Rfid', '');
+                }
+            });
+
+            editor.on('submitSuccess', function (e, json, data, action) {
+                if (action === "create") {
+                    new PNotify({
+                        text: 'Cleaner has been added',
+                        buttons: {
+                            closer: false,
+                            sticker: false
+                        },
+                        animate: {
+                            animate: true,
+                            in_class: 'slideInUp',
+                            out_class: 'slideOutDown'
+                        },
+                        addclass: 'md stack-bottomleft',
+                        delay: 2750
+                    });
+                    $("#totalCleaners").text(cleaners.data().count());
+                } else if (action === "edit") {
+                    new PNotify({
+                        text: 'Cleaner details saved',
+                        buttons: {
+                            closer: false,
+                            sticker: false
+                        },
+                        animate: {
+                            animate: true,
+                            in_class: 'slideInUp',
+                            out_class: 'slideOutDown'
+                        },
+                        addclass: 'md stack-bottomleft',
+                        delay: 2750
+                    });
+                } else {
+                    new PNotify({
+                        text: 'Cleaner has been deleted',
+                        buttons: {
+                            closer: false,
+                            sticker: false
+                        },
+                        animate: {
+                            animate: true,
+                            in_class: 'slideInUp',
+                            out_class: 'slideOutDown'
+                        },
+                        addclass: 'md stack-bottomleft',
+                        delay: 2750
+                    });
+                    $("#totalCleaners").text(cleaners.data().count());
+                }
+            });
+
+            $("input.form-control").on("keyup click", function () {
+                filterColumn($(this).parents().eq(1).attr("data-column"), $(this).attr("id"));
+            });
+
+            $("#collapseFilterCleaners").on("shown.bs.collapse", function () {
+                $("#name").focus();
+            });
+
+            $("#btnResetFilters").click(function () {
+                $("input:text").each(function () {
+                    $(this).val("");
+
+                    if ($(this).hasClass("md-has-value")) {
+                        $(this).removeClass("md-has-value");
+                    }
+                });
+
+                $("#tblCleaners").DataTable().search("").columns().search("").draw();
+                $("#name").focus();
+            });
+        });
+
+        function filterColumn(i, id) {
+            $("#tblCleaners").DataTable().column(i).search(
+                $(`#${id}`).val()
+            ).draw();
+        }
+    </script>
+
+<script type="text/javascript" src="https://www.chartjs.org/dist/2.7.3/Chart.bundle.js"></script>
+
+    <script>
+        var johnrating1 = 0;
+        var johnrating2 = 0; 
+        var johnrating3 = 0; 
+        var johnrating4 = 0; 
+        var johnrating5 = 0;    
+
+        var randyrating1 = 0;
+        var randyrating2 = 0; 
+        var randyrating3 = 0; 
+        var randyrating4 = 0; 
+        var randyrating5 = 0;    
+
+        var janerating1 = 0;
+        var janerating2 = 0; 
+        var janerating3 = 0; 
+        var janerating4 = 0; 
+        var janerating5 = 0;    
+
+        var brrating1 = 0;
+        var brrating2 = 0; 
+        var brrating3 = 0; 
+        var brrating4 = 0; 
+        var brrating5 = 0;    
+
+
+
+        $(document).ready(function() {calculateRatings() });
+
+        $(document).on("change", "select[id^='mthli']", function() { calculateRatings() });
+
+        $(document).on("change", "select[id^='brlist']", function() { calculateRatings() });
+
+
+
+
+        function calculateRatings() {
+
+      
+            $.ajax({
+
+                url: '/api/Reviews',
+                dataType: 'json',
+                method: 'get',
+                async: false,
+                success: function (data) {
+                    var brlist = document.getElementById('brlist');
+
+                    var result = data.filter(function (el) {
+                        return el.year == brlist.value;
+                    });
+                
+
+                    var john = data.filter(function(el) {
+                        return el.name == "John Lee" && el.year == brlist.value && el.month == mthli.value;
+                    })
+                
+                    var randy = data.filter(function(el) {
+                        return el.name == "Randy Ang" && el.year == brlist.value && el.month == mthli.value;
+                    })
+
+                    var jane = data.filter(function(el) {
+                        return el.name == "Jane Tan" && el.year == brlist.value && el.month == mthli.value;
+                    })
+                
+                    var br = data.filter(function(el) {
+                        return el.name == "Brandon Lee" && el.year == brlist.value && el.month == mthli.value;
+                    })
+
+
+
+                    johnrating1 = 0;
+                    johnrating2 = 0; 
+                    johnrating3 = 0; 
+                    johnrating4 = 0; 
+                    johnrating5 = 0;    
+                    johnratings = new Array;    
+
+
+                    for (var i = 0; i < john.length; i++) {
+                        if (john[i].rating === 5) {  
+                            johnrating5++;
+                        }
+                        else if (john[i].rating === 4) {  
+                            johnrating4++;
+                        }     
+                        else if (john[i].rating === 3) {  
+                            johnrating3++;
+                        }
+                        else if (john[i].rating === 2) {  
+                            johnrating2++;
+                        }
+                        else if (john[i].rating === 1) {  
+                            johnrating1++;
+                        }
+                    }    
+
+                    johnratings.push(johnrating5);
+                    johnratings.push(johnrating4);  
+                    johnratings.push(johnrating3);
+                    johnratings.push(johnrating2);
+                    johnratings.push(johnrating1);     
+                   
+                    var johnscore = 0;    
+
+                    johnscore  = (5*johnratings[0] + 4*johnratings[1] + 3*johnratings[2] + 4*johnratings[3] + 5*johnratings[4]) / (johnratings[0] + johnratings[1] + johnratings[2] +johnratings[3] +johnratings[4] );  
+
+                    console.log(johnscore);    
+
+                
+
+                    janerating1 = 0;
+                    janerating2 = 0; 
+                    janerating3 = 0; 
+                    janerating4 = 0; 
+                    janerating5 = 0;    
+                    janeratings = new Array;    
+
+
+                    for (var i = 0; i < jane.length; i++) {
+                        if (jane[i].rating === 5) {  
+                            janerating5++;
+                        }
+                        else if (jane[i].rating === 4) {  
+                            janerating4++;
+                        }     
+                        else if (jane[i].rating === 3) {  
+                            janerating3++;
+                        }
+                        else if (jane[i].rating === 2) {  
+                            janerating2++;
+                        }
+                        else if (jane[i].rating === 1) {  
+                            janerating1++;
+                        }
+                    }    
+
+                    janeratings.push(janerating5);
+                    janeratings.push(janerating4);  
+                    janeratings.push(janerating3);
+                    janeratings.push(janerating2);
+                    janeratings.push(janerating1);     
+                  
+                    var janescore = 0;    
+
+                    janescore  = (5*janeratings[0] + 4*janeratings[1] + 3*janeratings[2] + 4*janeratings[3] + 5*janeratings[4]) / (janeratings[0] + janeratings[1] + janeratings[2] +janeratings[3] +janeratings[4] );  
+
+
+
+
+                    randyrating1 = 0;
+                    randyrating2 = 0; 
+                    randyrating3 = 0; 
+                    randyrating4 = 0; 
+                    randyrating5 = 0;    
+                    randyratings = new Array;    
+
+
+                    for (var i = 0; i < randy.length; i++) {
+                        if (randy[i].rating === 5) {  
+                            randyrating5++;
+                        }
+                        else if (randy[i].rating === 4) {  
+                            randyrating4++;
+                        }     
+                        else if (randy[i].rating === 3) {  
+                            randyrating3++;
+                        }
+                        else if (randy[i].rating === 2) {  
+                            randyrating2++;
+                        }
+                        else if (randy[i].rating === 1) {  
+                            randyrating1++;
+                        }
+                    }    
+
+                    randyratings.push(randyrating5);
+                    randyratings.push(randyrating4);  
+                    randyratings.push(randyrating3);
+                    randyratings.push(randyrating2);
+                    randyratings.push(randyrating1);     
+                  
+                    var randyscore = 0;    
+
+                    randyscore  = (5*randyratings[0] + 4*randyratings[1] + 3*randyratings[2] + 4*randyratings[3] + 5*randyratings[4]) / (randyratings[0] + randyratings[1] + randyratings[2] +randyratings[3] +randyratings[4] );  
+
+
+
+
+                    brrating1 = 0;
+                    brrating2 = 0; 
+                    brrating3 = 0; 
+                    brrating4 = 0; 
+                    brrating5 = 0;    
+                    brratings = new Array;    
+
+
+                    for (var i = 0; i < br.length; i++) {
+                        if (br[i].rating === 5) {  
+                            brrating5++;
+                        }
+                        else if (br[i].rating === 4) {  
+                            brrating4++;
+                        }     
+                        else if (br[i].rating === 3) {  
+                            brrating3++;
+                        }
+                        else if (br[i].rating === 2) {  
+                            brrating2++;
+                        }
+                        else if (br[i].rating === 1) {  
+                            brrating1++;
+                        }
+                    }    
+
+                    brratings.push(brrating5);
+                    brratings.push(brrating4);  
+                    brratings.push(brrating3);
+                    brratings.push(brrating2);
+                    brratings.push(brrating1);     
+                  
+                    var brscore = 0;    
+
+                    brscore  = (5*brratings[0] + 4*brratings[1] + 3*brratings[2] + 4*brratings[3] + 5*brratings[4]) / (brratings[0] + brratings[1] + brratings[2] +brratings[3] +brratings[4] );  
+
+                    var finalrating = new Array;    
+                    finalrating.push(johnscore.toFixed(2));    
+                    finalrating.push(randyscore.toFixed(2));    
+                    finalrating.push(janescore.toFixed(2));    
+                    finalrating.push(brscore.toFixed(2));    
+
+                    console.log(finalrating);     
+
+                    new Chart(document.getElementById("ratingchart"),
+                        {"type":"bar",
+                            "data":{"labels":["John Lee", "Randy Ang", "Jane Tan", "Brandon Lee"],
+                                "datasets":[{"label":"Monthly Rating",
+                                    "data":finalrating,
+                                    "fill":false,"backgroundColor":["rgba(255, 99, 132, 0.2)","rgba(255, 159, 64, 0.2)","rgba(255, 205, 86, 0.2)","rgba(75, 192, 192, 0.2)","rgba(54, 162, 235, 0.2)","rgba(153, 102, 255, 0.2)","rgba(201, 203, 207, 0.2)"],"borderColor":["rgb(255, 99, 132)","rgb(255, 159, 64)","rgb(255, 205, 86)","rgb(75, 192, 192)","rgb(54, 162, 235)","rgb(153, 102, 255)","rgb(201, 203, 207)"],
+                                    "borderWidth":1}]},
+                            "options":{"scales":{"yAxes":[{"ticks":{"beginAtZero":true}}]}}});
+
+                    var tempHtml;
+
+                    tempHtml = "<tr><td>Cleaner Name</td><td>Performance Score</td></tr><tr><td>John Lee</td><td>" + finalrating[0] + "</td></tr>                      <tr><td>Randy Ang</td><td>" + finalrating[1] +  "</td></tr><tr><td>Jane Tan</td><td>" + finalrating[2] + "</td></tr><tr><td>Brandon Lee</td><td>" + finalrating[3] + "</td></tr>"    
+                    $("#tempTable").html(tempHtml);
+                }
+            })
+            
+        }
+    </script>
+
+}

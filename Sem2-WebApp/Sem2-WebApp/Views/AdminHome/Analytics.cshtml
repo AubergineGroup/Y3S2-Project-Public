@@ -1,0 +1,150 @@
+﻿
+@{
+    ViewData["Title"] = "Analytics";
+}
+@section Styles {
+    <link href="@Url.Content("https://mcaule.github.io/d3-timeseries/dist/d3_timeseries.min.css")" rel="stylesheet" type="text/css" />
+}
+
+<!--
+    <form>
+    <input type="text" id="day">
+    <input type="text" name="hour">
+    <input type="text" name="min">
+    <button id="btn">Click me</button>
+</form>
+
+-->
+
+<div class="col-12 col-lg-12 p-3">
+    <div class="widget widget5 better-card">
+        <div class="widget-header px-4 row no-gutters align-items-center justify-content-between">
+            <div class="col">
+                <span class="h5" id="sensorHistoryTitle">Predict</span>
+            </div>
+            <div class="widget-content p-4">
+                    <div layout-gt-xs="row" style="margin-bottom: 1.8rem" ng-controller="DatepickerController as ctrl">
+                        <div flex-gt-xs>
+                            <md-datepicker id="from" ng-model="ctrl.from" md-placeholder="From" md-max-date="ctrl.today" ng-change="" md-open-on-focus></md-datepicker>
+                            <md-datepicker id="to" ng-model="ctrl.to" md-placeholder="To" md-min-date="ctrl.from"  ng-change="" md-open-on-focus></md-datepicker>
+                            <button type="submit" class="btn btn-primary fuse-ripple-ready" style="margin-left:20px;" onclick="loadSensorData()">Search</button>
+                        </div>
+                    </div>
+              </div>
+        </div>
+
+        <div class="widget-content p-4">
+          <div>
+              <div id="chart">
+            </div>
+          </div>
+            
+        </div>
+
+    </div>
+</div>
+</div>
+
+@section Scripts {
+    <!--
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+        -->
+
+    <script src="~/js/ts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.0/d3.min.js"></script>
+    <script src="https://mcaule.github.io/d3-timeseries/dist/d3_timeseries.min.js"></script>
+
+    <script>
+        angular.module('docsApp').controller('DatepickerController', ['$scope', function ($scope) {
+            this.today = new Date();
+        }]);
+        $(document).ready(function () {
+
+            /*(async () => {
+               const model =  await tf.loadModel("/api/Analytic/model.json");
+               model.predict(tf.tensor2d([1, 1, 1], [1, 3])).dataSync();
+            })();
+            */
+        });
+
+        function downloadTextFile(text, name) {
+            const a = document.createElement('a');
+            const type = name.split(".").pop();
+            a.href = URL.createObjectURL(new Blob([text], { type: `text/${type === "txt" ? "plain" : type}` }));
+            a.download = name;
+            a.click();
+
+            //downloadTextFile(JSON.stringify(dat), 't1.json');
+        }
+
+        sensor_channel = "[REDACTED]";
+        function loadSensorData() {
+
+            var a = angular.element($("#from")).scope().ctrl.from,
+                b =angular.element($("#to")).scope().ctrl.to, c = "15m";
+
+           a = (new Date(a - 60000 * a.getTimezoneOffset())).toISOString();
+           b = (new Date(b - 60000 * b.getTimezoneOffset())).toISOString();
+
+
+            console.log(a + " " + b + " " + c);
+
+            $.ajax({
+                type: "POST", url: "/temp/getsensorhistory", async: false, data: { tablename: sensor_channel, datefrom: a, dateto: b, interval: c }
+                , success: function (e) {
+                    (async () => {
+                        const model = await tf.loadModel("/api/Analytic/model.json");
+                        dat = JSON.parse(e);
+                        dat = dat.Rows;
+                        $("#chart").html("");
+                        console.log(dat);
+                        var now = new Date();
+                       var toiletData = [];
+                        toiletData = dat.map(d => {
+
+                            var date = new Date(d.Timestamp);
+                            date.setHours(date.getHours() - 8);
+                            if (date > now) {
+                                d.mean_TotalUsers = Number.NaN;
+                            }
+
+                            var day = parseInt(new Date(date).getDay());
+                            var hour = parseInt(new Date(date).getHours());
+                            var min = parseInt(new Date(date).getMinutes());
+                            var value = model.predict(tf.tensor2d([day, hour, min], [1, 3])).dataSync()[0];
+                                var data = {
+                                    date: date,
+                                    n: d.mean_TotalUsers,
+                                    n3: value,
+                                    ci_up: value * 2.05,
+                                    ci_down: value * 1.95
+                            };
+
+
+                                return data;
+                            });
+
+                            console.log(toiletData);
+                            var chart = d3_timeseries()
+                                .addSerie(toiletData, { x: 'date', y: 'n' }, { interpolate: 'linear',  label: "value" })
+                                .addSerie(toiletData,
+                                { x: 'date', y: 'n3', ci_up: 'ci_up', ci_down: 'ci_down'},
+                                    { interpolate: 'monotone', dashed: true, label: "prediction" })
+                                .width(1250)
+                            chart('#chart')
+                    })();
+                }
+            });
+
+
+        }
+    </script>
+
+}
+
+
+
+
+
+

@@ -1,0 +1,211 @@
+﻿@{
+    ViewData["Title"] = "Scheduling";
+}
+
+@section Styles {
+    <style>
+        body {
+            background: #fff;
+        }
+
+        @*TEMPERORY STYLE*@
+        .better-card {
+            box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+        }
+    </style>
+
+    <link rel="stylesheet" href="~/resources/assets/libs/scheduler/dhtmlxscheduler_material.css" type="text/css" charset="utf-8">
+}
+
+<div id="project-dashboard" class="page-layout simple right-sidebar">
+    <div class="page-content-wrapper custom-scrollbar">
+        <div class="page-layout carded full-width">
+            <div class="top-bg bg-primary"></div>
+            <!-- CONTENT -->
+            <div class="page-content-wrapper">
+                <!-- HEADER -->
+                <div class="page-header light-fg row no-gutters align-items-center justify-content-between">
+                    <!-- APP TITLE -->
+                    <div class="col-12 col-sm">
+                        <div class="logo row no-gutters justify-content-center align-items-start justify-content-sm-start">
+                            <a href="Schedules" class="btn btn-icon mr-4 fuse-ripple-ready">
+                                <i class="icon icon-arrow-left"></i>
+                            </a>
+                            <div class="logo-text">
+                                <div class="h4" id="pageTitle">Loading...</div>
+                                <span class="text-muted">currently managing</span>
+                                <span id="pageSubTitle" style="font-weight:bold">...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- / APP TITLE -->
+                    <div class="col-auto">
+                        <a id="btnAssign" class="btn btn-light fuse-ripple-ready">ASSIGN NEW TASK</a>
+                    </div>
+                </div>
+                <!-- / HEADER -->
+                <div class="page-content-card">
+                    <div id="test_scheduler" class="dhx_cal_container" style='width:100%; height:600px'>
+                        <div class="dhx_cal_navline">
+                            <div class="dhx_cal_prev_button">&nbsp;</div>
+                            <div class="dhx_cal_next_button">&nbsp;</div>
+                            <div class="dhx_cal_today_button"></div>
+                            <div class="dhx_cal_date"></div>
+                            <div class="dhx_cal_tab" name="day_tab"></div>
+                            <div class="dhx_cal_tab" name="week_tab"></div>
+                            <div class="dhx_cal_tab" name="month_tab"></div>
+                        </div>
+                        <div class="dhx_cal_header"></div>
+                        <div class="dhx_cal_data"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- / CONTENT -->
+        </div>
+    </div>
+</div>
+<div id="exampleModalLive" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLiveLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLiveLabel">Modify Schedule</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Select cleaner/toilet</label>
+                    <select class="form-control" id="optionSelect">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input class="form-control md-has-value" type="datetime-local" value="2011-08-19T13:45:00" id="dateFrom">
+                    <label for="example-datetime-local-input">Start date</label>
+                </div>
+                <div class="form-group">
+                    <input class="form-control md-has-value" type="datetime-local" value="2011-08-19T13:45:00" id="dateTo">
+                    <label for="example-datetime-local-input">End date</label>
+                </div>
+                <button type="submit" class="btn btn-primary fuse-ripple-ready">SAVE</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
+    <script src="~/resources/assets/libs/scheduler/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        $("#btnAssign").click(function () {
+            $("#exampleModalLive").modal("show");
+        });
+
+        let req_id, req_type;
+        (function () {
+            if (localStorage && 'type' in localStorage && 'id' in localStorage) {
+                req_id = localStorage.id;
+                req_type = localStorage.type;
+                switch (req_type) {
+                    case 'cleaner':
+                        $.get('/Temp/GetCleanerById', { cleanerid: req_id },
+                            function (returnedData) {
+                                $("#pageTitle").text("Cleaner Schedule Management")
+                                $("#pageSubTitle").text(returnedData[0].firstName + ' ' + returnedData[0].lastName)
+                            });
+                        break;
+                    case 'toilet':
+                        $.get('/Temp/GetToiletById', { toiletid: req_id },
+                            function (returnedData) {
+                                $("#pageTitle").text("Toilet Schedule Management")
+                                $("#pageSubTitle").text(returnedData[0].toiletName)
+                            });
+                }
+            }
+            else {
+                //window.stop();
+                //alert("Invalid request: You will now be redirected back to the schedules page.");
+                //window.location.replace("Schedules");
+            }
+        })();
+        $(window).on('load', function () {
+            setTimeout(function () {
+                scheduler.config.xml_date = "%Y-%m-%dT%H:%i:%s";
+                scheduler.config.cascade_event_display = true;
+                scheduler.config.separate_short_events = true;
+                scheduler.config.first_hour = 8;
+                scheduler.config.last_hour = 18;
+                scheduler.config.start_on_monday = true;
+                
+                scheduler.attachEvent("onTemplatesReady", function () {
+                    scheduler.templates.xml_date = function (dateString) {
+                        return new Date(dateString)
+                    };
+                    scheduler.templates.xml_format = function (date) {
+                        return date.toISOString();
+                    };
+                });
+
+                scheduler.config.icons_select = [
+                    "icon_delete",
+                    "icon_edit"
+                ];
+
+                scheduler._click.buttons.edit = function (id) {
+                    var eventObj = scheduler.getEvent(id);
+                    console.log(eventObj);
+                };
+
+                scheduler.attachEvent("onDblClick", function (id, e) {
+                    var eventObj = scheduler.getEvent(id);
+                    console.log(eventObj);
+                })
+                
+                scheduler.init('test_scheduler', new Date(), "week");
+                $.ajax({
+                    url: "/api/Schedule",
+                    headers: {
+                        "type": req_type,
+                        "id": req_id
+                    },
+                    success: function (result) {
+                        scheduler.parse(result, "json");
+                    }
+                });
+                var dp = new dataProcessor("/api/Schedule");
+                dp.init(scheduler);
+                dp.setTransactionMode({
+                    mode: "REST",
+                    headers: {
+                        "type": req_type,
+                        "id": req_id
+                    }
+                });
+            }, 1000);
+        });
+
+        function loadSchedulerData() {
+            $.get('/Temp/GetCleanerSchedule', { cleanerid: "1" },
+                function (data) {
+                    scheduler_data = [];
+                    const schedule_data = JSON.parse(data);
+                    var len = schedule_data.length;
+                    for (var i = 0; i < len; i++) {
+                        let obj = {
+                            text: schedule_data[i][2],
+                            start_date: schedule_data[i][3],
+                            end_date: schedule_data[i][4]
+                        };
+                        scheduler_data.push(obj);
+                    }
+                    scheduler.parse(JSON.stringify(scheduler_data), "json");
+                });
+        }
+    </script>
+}
